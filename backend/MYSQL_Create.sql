@@ -61,7 +61,7 @@ INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine) VALUES
 ('Biscotti', 45, 1.80, 'img/biscotti.png'),
 ('Formaggio', 25, 3.50, 'img/formaggio.png'),
 ('Pomodori', 90, 1.10, 'img/pomodori.png'),
-('Olio d\'oliva', 20, 5.00, 'img/olio.png');
+('Olio di oliva', 20, 5.00, 'img/olio.png');
 
 -- Carrello PAGATO (IdUtente = 1)
 INSERT INTO Carrello (IdUtente, PrezzoTotale, Pagato, DataPagamento)

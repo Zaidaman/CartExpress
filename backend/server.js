@@ -17,8 +17,8 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// Endpoint per ottenere dati
-app.get('/api/prodotti', async (req, res) => {
+// API Test MySQL
+app.get('/api/testProdotti', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM Prodotti');
         
@@ -32,6 +32,36 @@ app.get('/api/prodotti', async (req, res) => {
     }
 });
 
+// API Test MySQL
+app.get('/api/testProdotti', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM Prodotti');
+        
+        // Stampa i dati sulla console
+        console.log('Dati ricevuti da MySQL:', rows);
+        
+        res.json(rows);
+    } catch (err) {
+        console.error('Errore query MySQL:', err);
+        res.status(500).json({ error: 'Errore nel recupero dati' });
+    }
+});
+
+app.post('/api/login', async (req, res) => {
+    const { Nome, Password } = { Nome: 'MarioRossi', Password: 'pass' }; //req.body; // dati inviati dal frontend
+
+    try {
+        const [rows] = await pool.query(
+            'SELECT IdUtente FROM Utente WHERE Nome = ? AND Password <= ?',
+            [Nome, Password] // valori sicuri con placeholders
+        );
+        
+        res.json(rows);
+    } catch (err) {
+        console.error('Errore query MySQL:', err);
+        res.status(500).json({ error: 'Errore nel recupero dati' });
+    }
+});
 
 // Avvia server
 const PORT = 3000;
