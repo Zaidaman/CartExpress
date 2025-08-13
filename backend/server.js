@@ -32,6 +32,33 @@ app.get('/api/testProdotti', async (req, res) => {
     }
 });
 
+
+app.get('/api/testCategorie', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM Categoria');
+        console.log('Dati ricevuti da MySQL:', rows);
+        res.json(rows);
+    } catch (err) {
+        console.error('Errore query MySQL:', err);
+        res.status(500).json({ error: 'Errore nel recupero dati' });
+    }
+});
+
+// API: prodotti per categoria
+app.get('/api/prodotti/categoria/:idCategoria', async (req, res) => {
+    const { idCategoria } = req.params;
+    try {
+        const [rows] = await pool.query(
+            'SELECT * FROM Prodotti WHERE IdCategoria = ?',
+            [idCategoria]
+        );
+        res.json(rows);
+    } catch (err) {
+        console.error('Errore query MySQL:', err);
+        res.status(500).json({ error: 'Errore nel recupero dati' });
+    }
+});
+
 // API Test MySQL
 app.get('/api/testProdotti', async (req, res) => {
     try {

@@ -8,6 +8,7 @@ CREATE TABLE Prodotti (
     Quantita INT NOT NULL DEFAULT 0,
     Prezzo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     Immagine VARCHAR(250) -- percorso immagine
+    FOREIGN KEY (IdCategoria) REFERENCES Categoria(IdCategoria)
 );
 
 -- Tabella Utenti
@@ -15,6 +16,12 @@ CREATE TABLE Utente (
     IdUtente INT AUTO_INCREMENT PRIMARY KEY,
     Nome VARCHAR(100) NOT NULL,
     Password VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE Categoria (
+    IdCategoria INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100) NOT NULL
+    Immagine VARCHAR(250) -- percorso immagine
 );
 
 -- Tabella Carrelli
@@ -62,6 +69,14 @@ INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine) VALUES
 ('Formaggio', 25, 3.50, 'img/formaggio.png'),
 ('Pomodori', 90, 1.10, 'img/pomodori.png'),
 ('Olio di oliva', 20, 5.00, 'img/olio.png');
+
+
+INSERT INTO Categoria (Nome, Immagine) VALUES
+('Frutta', 'img/frutta.png'),
+('Verdura', 'img/verdura.png'),
+('Pasta', 'img/pasta.png'),
+('Pane', 'img/pane.png'),
+('Latticini', 'img/latticini.png');
 
 -- Carrello PAGATO (IdUtente = 1)
 INSERT INTO Carrello (IdUtente, PrezzoTotale, Pagato, DataPagamento)

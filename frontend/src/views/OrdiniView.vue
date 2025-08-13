@@ -5,7 +5,8 @@ const ordini = ref([]);
 
 onMounted(async () => {
   try {
-    const res = await fetch('http://localhost:3000/api/ordini'); // endpoint backend
+    // Sostituisci con l'endpoint reale quando disponibile
+    const res = await fetch('http://localhost:3000/api/ordini');
     ordini.value = await res.json();
   } catch (err) {
     console.error('Errore nel fetch ordini:', err);
@@ -18,7 +19,9 @@ onMounted(async () => {
     <h1>Lista Ordini</h1>
     <ul v-if="ordini.length">
       <li v-for="ordine in ordini" :key="ordine.id">
-        {{ ordine.prodotto }} - Quantità: {{ ordine.quantita }}
+        <strong>{{ ordine.prodotto }}</strong>
+        <span v-if="ordine.categoria"> (Categoria: {{ ordine.categoria }})</span>
+        - Quantità: {{ ordine.quantita }}
       </li>
     </ul>
     <p v-else>Nessun ordine trovato o caricamento in corso...</p>
