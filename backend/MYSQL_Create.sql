@@ -58,17 +58,17 @@ INSERT INTO Utente (Nome, Password) VALUES
 ('AnnaVerdi', 'test');
 
 -- Inserimento prodotti (.png invece di .jpg)
-INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine) VALUES
-('Mela', 100, 0.50, 'img/mela.png'),
-('Banana', 80, 0.70, 'img/banana.png'),
-('Pasta', 50, 1.20, 'img/pasta.png'),
-('Pane', 40, 1.00, 'img/pane.png'),
-('Latte', 60, 1.30, 'img/latte.png'),
-('Uova', 30, 2.50, 'img/uova.png'),
-('Biscotti', 45, 1.80, 'img/biscotti.png'),
-('Formaggio', 25, 3.50, 'img/formaggio.png'),
-('Pomodori', 90, 1.10, 'img/pomodori.png'),
-('Olio di oliva', 20, 5.00, 'img/olio.png');
+INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine, IdCategoria) VALUES
+('Mela', 100, 0.50, 'img/mela.png', 1),
+('Banana', 80, 0.70, 'img/banana.png', 1),
+('Farfalle', 50, 1.20, 'img/farfalle.png', 3),
+('Alberghiero', 40, 1.00, 'img/alberghiero.png', 4),
+('Latte', 60, 1.30, 'img/latte.png', 5),
+('Uova', 30, 2.50, 'img/uova.png', 5),
+('Biscotti', 45, 1.80, 'img/biscotti.png', 4),
+('Formaggio', 25, 3.50, 'img/formaggio.png', 5),
+('Pomodori', 90, 1.10, 'img/pomodori.png', 2),
+('Olio di oliva', 20, 5.00, 'img/olio.png', 2);
 
 
 INSERT INTO Categoria (Nome, Immagine) VALUES
