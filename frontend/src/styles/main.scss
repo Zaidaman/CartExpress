@@ -28,3 +28,51 @@ button {
 button:hover {
   background-color: darken($button-bg, 10%);
 }
+
+.view-container {
+  background: #fff;
+  color: #333;
+  max-width: 800px;
+  margin: 30px auto 0 auto;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+h1, h2 {
+  color: #C46000;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.card {
+  background: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 4px 16px rgba(196,96,0,0.12);
+}
+
+a, router-link {
+  color: #C46000;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+a:hover, router-link:hover {
+  color: #a34d00;
+}
+
+@media (max-width: 600px) {
+  .view-container {
+    padding: 1rem 0.5rem;
+    max-width: 98vw;
+  }
+  h1, h2 {
+    font-size: 1.3rem;
+  }
+}

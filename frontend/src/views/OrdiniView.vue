@@ -15,7 +15,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="ordini">
+  <div class="view-container">
     <h1>Lista Ordini</h1>
     <ul v-if="ordini.length">
       <li v-for="ordine in ordini" :key="ordine.id">

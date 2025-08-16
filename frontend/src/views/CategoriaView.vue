@@ -30,7 +30,7 @@ async function caricaProdotti(idCategoria) {
 </script>
 
 <template>
-	<div class="categorie">
+	<div class="view-container">
 		<h1>Seleziona una Categoria</h1>
 		<ul v-if="categorie.length">
 			<li v-for="cat in categorie" :key="cat.IdCategoria">

@@ -1,6 +1,6 @@
 
 <template>
-	<div class="ricerca-container">
+	<div class="view-container">
 		<h1>Ricerca</h1>
 		<input
 			v-model="codice"

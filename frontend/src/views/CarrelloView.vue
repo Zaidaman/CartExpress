@@ -1,6 +1,6 @@
 
 <template>
-	<div class="carrello-view">
+	<div class="view-container">
 		<h1>Carrello</h1>
 		<input v-model="dato" type="text" placeholder="Inserisci un dato" />
 		<button @click="inviaDato">Invia</button>
