@@ -29,7 +29,7 @@ async function caricaProdotti(idCategoria) {
 </script>
 
 <template>
-	<div class="layout">
+	<div class="view-container">
 		<aside class="sidebar">
 			<h2>Categorie</h2>
 			<ul v-if="categorie.length">
@@ -44,7 +44,7 @@ async function caricaProdotti(idCategoria) {
 		</aside>
 
 
-		<main class="content">
+		<main class="view-container">
 			<div v-if="!categoriaSelezionata" class="placeholder">
 				<p>Seleziona una categoria per vedere i prodotti</p>
 			</div>
@@ -62,38 +62,3 @@ async function caricaProdotti(idCategoria) {
 		</main>
 	</div>
 </template>
-
-<style scoped>
-.view-container {
-	display: flex;              /* affianca le due colonne */
-	gap: 20px;                  /* spazio tra le box */
-	padding: 20px;
-}
-
-.view-container-categorie {
-	flex: 1;                    /* occupa metà spazio */
-	background-color: #f0f8ff;  /* colore diverso */
-	padding: 20px;
-	border-radius: 8px;
-}
-
-.view-container-prodotti {
-	flex: 2;                    /* più spazio ai prodotti */
-	background-color: #fff8dc;  /* colore diverso */
-	padding: 20px;
-	border-radius: 8px;
-}
-
-button {
-	margin: 5px 0;
-	padding: 8px 15px;
-	background: #42b983;
-	color: white;
-	border: none;
-	border-radius: 4px;
-	cursor: pointer;
-}
-button:hover {
-	background: #369f6e;
-}
-</style>
