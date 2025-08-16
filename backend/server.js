@@ -20,7 +20,7 @@ const pool = mysql.createPool({
 // API Test MySQL
 app.get('/api/testProdotti', async (req, res) => {
     try {
-        const [rows] = await pool.query('SELECT * FROM Prodotti');
+        const [rows] = await pool.query('SELECT Nome, Prezzo, Immagine FROM Prodotti');
         
         // Stampa i dati sulla console
         console.log('Dati ricevuti da MySQL:', rows);
@@ -31,7 +31,6 @@ app.get('/api/testProdotti', async (req, res) => {
         res.status(500).json({ error: 'Errore nel recupero dati' });
     }
 });
-
 
 app.get('/api/testCategorie', async (req, res) => {
     try {
@@ -49,24 +48,9 @@ app.get('/api/prodotti/categoria/:idCategoria', async (req, res) => {
     const { idCategoria } = req.params;
     try {
         const [rows] = await pool.query(
-            'SELECT * FROM Prodotti WHERE IdCategoria = ?',
+            'SELECT Nome, Prezzo, Immagine FROM Prodotti WHERE IdCategoria = ?',
             [idCategoria]
         );
-        res.json(rows);
-    } catch (err) {
-        console.error('Errore query MySQL:', err);
-        res.status(500).json({ error: 'Errore nel recupero dati' });
-    }
-});
-
-// API Test MySQL
-app.get('/api/testProdotti', async (req, res) => {
-    try {
-        const [rows] = await pool.query('SELECT * FROM Prodotti');
-        
-        // Stampa i dati sulla console
-        console.log('Dati ricevuti da MySQL:', rows);
-        
         res.json(rows);
     } catch (err) {
         console.error('Errore query MySQL:', err);

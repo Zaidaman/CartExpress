@@ -35,7 +35,8 @@ async function caricaProdotti(idCategoria) {
 		<ul v-if="categorie.length">
 			<li v-for="cat in categorie" :key="cat.IdCategoria">
 				<button @click="caricaProdotti(cat.IdCategoria)">
-					{{ cat.NomeCategoria }}
+					{{ cat.Nome }}
+        			<img :src="`/${cat.Immagine}`"/>
 				</button>
 			</li>
 		</ul>
@@ -44,8 +45,8 @@ async function caricaProdotti(idCategoria) {
 		<div v-if="categoriaSelezionata">
 			<h2>Prodotti della categoria</h2>
 			<ul v-if="prodotti.length">
-				<li v-for="prod in prodotti" :key="prod.IdProdotto">
-					{{ prod.NomeProdotto }} - Prezzo: {{ prod.Prezzo }} €
+				<li v-for="prod in prodotti" :key="prod.Nome">
+					<img :src="`/${prod.Immagine}`"/> {{ prod.Nome }} - Prezzo: {{ prod.Prezzo }} €
 				</li>
 			</ul>
 			<p v-else>Nessun prodotto trovato per questa categoria.</p>

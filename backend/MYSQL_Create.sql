@@ -29,24 +29,24 @@ CREATE TABLE Ordini (
 USE CartExpress;
 
 INSERT INTO Categoria (Nome, Immagine) VALUES
-('Frutta', 'img/frutta.png'),
-('Verdura', 'img/verdura.png'),
-('Pasta', 'img/pasta.png'),
-('Pane', 'img/pane.png'),
-('Latticini', 'img/latticini.png');
+('Frutta', 'img/cat/frutta.png'),
+('Verdura', 'img/cat/verdura.png'),
+('Pasta', 'img/cat/pasta.png'),
+('Pane', 'img/cat/pane.png'),
+('Latticini', 'img/cat/latticini.png');
 
 -- Inserimento prodotti
 INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine, IdCategoria) VALUES
-('Mela', 100, 0.50, 'img/mela.png', 1),
-('Banana', 80, 0.70, 'img/banana.png', 1),
-('Farfalle', 50, 1.20, 'img/farfalle.png', 3),
-('Alberghiero', 40, 1.00, 'img/alberghiero.png', 4),
-('Latte', 60, 1.30, 'img/latte.png', 5),
-('Uova', 30, 2.50, 'img/uova.png', 5),
-('Biscotti', 45, 1.80, 'img/biscotti.png', 4),
-('Formaggio', 25, 3.50, 'img/formaggio.png', 5),
-('Pomodori', 90, 1.10, 'img/pomodori.png', 2),
-('Olio di oliva', 20, 5.00, 'img/olio.png', 2);
+('Mela', 100, 0.50, 'img/prod/mela.png', 1),
+('Banana', 80, 0.70, 'img/prod/banana.png', 1),
+('Farfalle', 50, 1.20, 'img/prod/farfalle.png', 3),
+('Alberghiero', 40, 1.00, 'img/prod/alberghiero.png', 4),
+('Latte', 60, 1.30, 'img/prod/latte.png', 5),
+('Uova', 30, 2.50, 'img/prod/uova.png', 5),
+('Biscotti', 45, 1.80, 'img/prod/biscotti.png', 4),
+('Formaggio', 25, 3.50, 'img/prod/formaggio.png', 5),
+('Pomodori', 90, 1.10, 'img/prod/pomodori.png', 2),
+('Olio di oliva', 20, 5.00, 'img/prod/olio.png', 2);
 
 -- Inserimento Ordine Carrello
 INSERT INTO Ordini (Email, PrezzoTotale, DataCreazione, ListaProdotti)
