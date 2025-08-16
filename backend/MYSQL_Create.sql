@@ -1,63 +1,41 @@
-CREATE DATABASE CartExpress;
+CREATE DATABASE CARTEXPRESS;
 USE CartExpress;
-
--- Tabella Prodotti
-CREATE TABLE Prodotti (
-    IdProdotto INT AUTO_INCREMENT PRIMARY KEY,
-    Nome VARCHAR(100) NOT NULL,
-    Quantita INT NOT NULL DEFAULT 0,
-    Prezzo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    Immagine VARCHAR(250) -- percorso immagine
-    FOREIGN KEY (IdCategoria) REFERENCES Categoria(IdCategoria)
-);
-
--- Tabella Utenti
-CREATE TABLE Utente (
-    IdUtente INT AUTO_INCREMENT PRIMARY KEY,
-    Nome VARCHAR(100) NOT NULL,
-    Password VARCHAR(200) NOT NULL
-);
 
 CREATE TABLE Categoria (
     IdCategoria INT AUTO_INCREMENT PRIMARY KEY,
-    Nome VARCHAR(100) NOT NULL
+    Nome VARCHAR(100) NOT NULL,
     Immagine VARCHAR(250) -- percorso immagine
 );
 
--- Tabella Carrelli
-CREATE TABLE Carrello (
-    IdCarrello INT AUTO_INCREMENT PRIMARY KEY,
-    IdUtente INT NOT NULL,
-    PrezzoTotale DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    DataCreazione DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    Pagato BOOLEAN DEFAULT FALSE,
-    DataPagamento DATETIME,
-    FOREIGN KEY (IdUtente) REFERENCES Utente(IdUtente)
+-- Tabella Prodotti
+CREATE TABLE Prodotti (
+    Nome VARCHAR(100) NOT NULL PRIMARY KEY,
+    Quantita INT NOT NULL DEFAULT 0,
+    Prezzo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    Immagine VARCHAR(250), -- percorso immagine
+    IdCategoria INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (IdCategoria) REFERENCES Categoria(IdCategoria)
 );
 
--- Tabella Ordini
-CREATE TABLE Ordine (
+-- Tabella Carrelli
+CREATE TABLE Ordini (
     IdOrdine INT AUTO_INCREMENT PRIMARY KEY,
-    IdCarrello INT NOT NULL,
-    IdUtente INT NOT NULL,
-    IdProdotto INT NOT NULL,
-    Quantita INT NOT NULL,
-    DataInserimento DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PrezzoUnitario DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (IdCarrello) REFERENCES Carrello(IdCarrello),
-    FOREIGN KEY (IdUtente) REFERENCES Utente(IdUtente),
-    FOREIGN KEY (IdProdotto) REFERENCES Prodotti(IdProdotto)
+    Email VARCHAR(150) NOT NULL,
+    PrezzoTotale DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    DataCreazione DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ListaProdotti VARCHAR(4000) NOT NULL 
 );
 
 USE CartExpress;
 
--- Inserimento utenti (nickname + password semplici)
-INSERT INTO Utente (Nome, Password) VALUES
-('MarioRossi', 'pass'),
-('LucaBianchi', '12345'),
-('AnnaVerdi', 'test');
+INSERT INTO Categoria (Nome, Immagine) VALUES
+('Frutta', 'img/frutta.png'),
+('Verdura', 'img/verdura.png'),
+('Pasta', 'img/pasta.png'),
+('Pane', 'img/pane.png'),
+('Latticini', 'img/latticini.png');
 
--- Inserimento prodotti (.png invece di .jpg)
+-- Inserimento prodotti
 INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine, IdCategoria) VALUES
 ('Mela', 100, 0.50, 'img/mela.png', 1),
 ('Banana', 80, 0.70, 'img/banana.png', 1),
@@ -70,30 +48,8 @@ INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine, IdCategoria) VALUES
 ('Pomodori', 90, 1.10, 'img/pomodori.png', 2),
 ('Olio di oliva', 20, 5.00, 'img/olio.png', 2);
 
+-- Inserimento Ordine Carrello
+INSERT INTO Ordini (Email, PrezzoTotale, DataCreazione, ListaProdotti)
+VALUES ('pippo@gmail.com', 2.00, '2025-08-16 14:30:00', 'Mela 4 0.50 2.00');
 
-INSERT INTO Categoria (Nome, Immagine) VALUES
-('Frutta', 'img/frutta.png'),
-('Verdura', 'img/verdura.png'),
-('Pasta', 'img/pasta.png'),
-('Pane', 'img/pane.png'),
-('Latticini', 'img/latticini.png');
-
--- Carrello PAGATO (IdUtente = 1)
-INSERT INTO Carrello (IdUtente, PrezzoTotale, Pagato, DataPagamento)
-VALUES (1, 7.60, TRUE, '2025-08-08 14:30:00');
-
--- Carrello NON pagato (IdUtente = 2)
-INSERT INTO Carrello (IdUtente, PrezzoTotale, Pagato)
-VALUES (2, 4.40, FALSE);
-
--- Ordini per il carrello pagato (IdCarrello = 1)
-INSERT INTO Ordine (IdCarrello, IdUtente, IdProdotto, Quantita, PrezzoUnitario) VALUES
-(1, 1, 1, 4, 0.50),   -- 4 Mele
-(1, 1, 3, 2, 1.20),   -- 2 Pasta
-(1, 1, 6, 1, 2.50);   -- 1 Uova
-
--- Ordini per il carrello non pagato (IdCarrello = 2)
-INSERT INTO Ordine (IdCarrello, IdUtente, IdProdotto, Quantita, PrezzoUnitario) VALUES
-(2, 2, 2, 3, 0.70),   -- 3 Banane
-(2, 2, 4, 2, 1.00),   -- 2 Pane
-(2, 2, 5, 1, 1.30);   -- 1 Latte
+-- Formazione ListaProdotti: Nome Quantità Prezzo PrezzoSubTotale
