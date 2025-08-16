@@ -1,4 +1,3 @@
-
 <script setup>
 import { ref, onMounted } from 'vue';
 
@@ -30,35 +29,61 @@ async function caricaProdotti(idCategoria) {
 </script>
 
 <template>
-	<div class="view-container">
-		<h1>Seleziona una Categoria</h1>
-		<ul v-if="categorie.length">
-			<li v-for="cat in categorie" :key="cat.IdCategoria">
-				<button @click="caricaProdotti(cat.IdCategoria)">
-					{{ cat.Nome }}
-        			<img :src="`/${cat.Immagine}`"/>
-				</button>
-			</li>
-		</ul>
-		<p v-else>Caricamento categorie...</p>
-
-		<div v-if="categoriaSelezionata">
-			<h2>Prodotti della categoria</h2>
-			<ul v-if="prodotti.length">
-				<li v-for="prod in prodotti" :key="prod.Nome">
-					<img :src="`/${prod.Immagine}`"/> {{ prod.Nome }} - Prezzo: {{ prod.Prezzo }} €
+	<div class="layout">
+		<aside class="sidebar">
+			<h2>Categorie</h2>
+			<ul v-if="categorie.length">
+				<li v-for="cat in categorie" :key="cat.IdCategoria">
+					<button @click="caricaProdotti(cat.IdCategoria)">
+						<img :src="`/${cat.Immagine}`" alt="" />
+						<span>{{ cat.Nome }}</span>
+					</button>
 				</li>
 			</ul>
-			<p v-else>Nessun prodotto trovato per questa categoria.</p>
-		</div>
+			<p v-else>Caricamento categorie...</p>
+		</aside>
+
+
+		<main class="content">
+			<div v-if="!categoriaSelezionata" class="placeholder">
+				<p>Seleziona una categoria per vedere i prodotti</p>
+			</div>
+
+			<div v-else>
+				<h2>Prodotti</h2>
+				<ul v-if="prodotti.length">
+					<li v-for="prod in prodotti" :key="prod.IdProdotto">
+						<img :src="`/${prod.Immagine}`" alt="" />
+						{{ prod.Nome }} - Prezzo: {{ prod.Prezzo }} €
+					</li>
+				</ul>
+				<p v-else>Nessun prodotto trovato per questa categoria.</p>
+			</div>
+		</main>
 	</div>
 </template>
 
 <style scoped>
-.categorie {
+.view-container {
+	display: flex;              /* affianca le due colonne */
+	gap: 20px;                  /* spazio tra le box */
 	padding: 20px;
-	font-family: sans-serif;
 }
+
+.view-container-categorie {
+	flex: 1;                    /* occupa metà spazio */
+	background-color: #f0f8ff;  /* colore diverso */
+	padding: 20px;
+	border-radius: 8px;
+}
+
+.view-container-prodotti {
+	flex: 2;                    /* più spazio ai prodotti */
+	background-color: #fff8dc;  /* colore diverso */
+	padding: 20px;
+	border-radius: 8px;
+}
+
 button {
 	margin: 5px 0;
 	padding: 8px 15px;
