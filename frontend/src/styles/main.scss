@@ -165,3 +165,17 @@ img {
 	display: block;
 	margin: 0 auto 0.5em auto;
 }
+
+nav a, 
+nav router-link {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-right: 20px;
+  color: #C46000;
+  text-decoration: none;
+}
+
+nav a:hover,
+nav router-link:hover {
+  color: #a34d00;
+}
