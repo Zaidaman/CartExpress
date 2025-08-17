@@ -30,35 +30,36 @@ async function caricaProdotti(idCategoria) {
 
 <template>
 	<div class="view-container">
-		<aside class="sidebar">
-			<h2>Categorie</h2>
-			<ul v-if="categorie.length">
-				<li v-for="cat in categorie" :key="cat.IdCategoria">
-					<button @click="caricaProdotti(cat.IdCategoria)">
-						<img :src="`/${cat.Immagine}`" alt="" />
-						<span>{{ cat.Nome }}</span>
-					</button>
-				</li>
-			</ul>
-			<p v-else>Caricamento categorie...</p>
-		</aside>
-
-
-		<main class="view-container">
-			<div v-if="!categoriaSelezionata" class="placeholder">
-				<p>Seleziona una categoria per vedere i prodotti</p>
-			</div>
-
-			<div v-else>
-				<h2>Prodotti</h2>
-				<ul v-if="prodotti.length">
-					<li v-for="prod in prodotti" :key="prod.IdProdotto">
-						<img :src="`/${prod.Immagine}`" alt="" />
-						{{ prod.Nome }} - Prezzo: {{ prod.Prezzo }} €
+		<div class="categorie-prodotti-wrapper">
+			<div class="categorie-container">
+				<h2>Categorie</h2>
+				<ul v-if="categorie.length">
+					<li v-for="cat in categorie" :key="cat.IdCategoria">
+						<button @click="caricaProdotti(cat.IdCategoria)">
+							<img :src="`/${cat.Immagine}`" alt="" />
+							<span>{{ cat.Nome }}</span>
+						</button>
 					</li>
 				</ul>
-				<p v-else>Nessun prodotto trovato per questa categoria.</p>
+				<p v-else>Caricamento categorie...</p>
 			</div>
-		</main>
+
+			<div class="prodotti-container">
+				<div v-if="!categoriaSelezionata" class="placeholder">
+					<p>Seleziona una categoria per vedere i prodotti</p>
+				</div>
+
+				<div v-else>
+					<h2>Prodotti</h2>
+					<ul v-if="prodotti.length">
+						<li v-for="prod in prodotti" :key="prod.IdProdotto">
+							<img :src="`/${prod.Immagine}`" alt="" />
+							{{ prod.Nome }} - Prezzo: {{ prod.Prezzo }} €
+						</li>
+					</ul>
+					<p v-else>Nessun prodotto trovato per questa categoria.</p>
+				</div>
+			</div>
+		</div>
 	</div>
 </template>

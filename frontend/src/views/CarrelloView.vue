@@ -23,23 +23,3 @@ const tornaHome = () => {
 	router.push('/');
 };
 </script>
-
-<style scoped>
-.carrello-view {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	gap: 10px;
-	max-width: 300px;
-	margin: 40px auto;
-}
-input {
-	padding: 6px;
-	width: 100%;
-	box-sizing: border-box;
-}
-button {
-	padding: 6px 12px;
-	margin-top: 5px;
-}
-</style>
