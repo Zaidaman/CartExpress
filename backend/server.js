@@ -48,7 +48,7 @@ app.get('/api/prodotti/categoria/:idCategoria', async (req, res) => {
     const { idCategoria } = req.params;
     try {
         const [rows] = await pool.query(
-            'SELECT Nome, Prezzo, Immagine FROM Prodotti WHERE IdCategoria = ?',
+            'SELECT Nome AS nome, Prezzo AS prezzo, Immagine AS immagine FROM Prodotti WHERE IdCategoria = ?',
             [idCategoria]
         );
         res.json(rows);

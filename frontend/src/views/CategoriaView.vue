@@ -22,7 +22,12 @@ async function caricaProdotti(idCategoria) {
 	try {
 		const res = await fetch(`http://localhost:3000/api/prodotti/categoria/${idCategoria}`);
 		prodotti.value = await res.json();
+<<<<<<< Updated upstream
 		// Reset quantità per i nuovi prodotti e imposta default a 1
+=======
+		console.log('Prodotti ricevuti:', prodotti.value);
+		// Reset quantità per i nuovi prodotti
+>>>>>>> Stashed changes
 		quantitaProdotti.value = {};
 		prodotti.value.forEach(prod => {
 			quantitaProdotti.value[prod.Nome] = 1;
@@ -49,8 +54,8 @@ function salvaInCookie(prodotto) {
 	}
 	// Crea oggetto da salvare
 	const item = {
-		nome: prodotto.Nome,
-		prezzo: prodotto.Prezzo,
+		nome: prodotto.nome,
+		prezzo: prodotto.prezzo,
 		quantita: Number(quantita)
 	};
 	// Recupera cookie esistente
@@ -97,17 +102,23 @@ function salvaInCookie(prodotto) {
 			<div v-else>
 				<h2>Prodotti</h2>
 				<ul v-if="prodotti.length">
-					<li v-for="prod in prodotti" :key="prod.Nome" class="prodotto-item">
-						<img :src="`/${prod.Immagine}`" alt="" />
+					<li v-for="prod in prodotti" :key="prod.nome" class="prodotto-item">
+						<img :src="`/${prod.immagine}`" alt="" />
+						{{ prod.Nome }} - Prezzo: {{ prod.Prezzo }} €
 						<div class="info-prodotto">
+<<<<<<< Updated upstream
 							<span class="nome-prodotto">{{ prod.Nome }}</span>
 							<span class="prezzo-prodotto"> Prezzo: {{ prod.Prezzo }} €</span>
+=======
+							<span class="nome-prodotto">{{ prod.nome }}</span>
+							<span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>
+>>>>>>> Stashed changes
 							<input
 								type="number"
 								min="1"
 								:placeholder="'Quantità'"
-								v-model="quantitaProdotti[prod.Nome]"
-								@input="aggiornaQuantita(prod.Nome, quantitaProdotti[prod.Nome])"
+								v-model="quantitaProdotti[prod.nome]"
+								@input="aggiornaQuantita(prod.nome, quantitaProdotti[prod.nome])"
 								class="input-quantita"
 							/>
 							<button @click="salvaInCookie(prod)" class="btn-salva">Salva</button>
