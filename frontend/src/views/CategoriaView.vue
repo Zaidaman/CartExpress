@@ -66,7 +66,7 @@ function salvaInCookie(prodotto) {
 		carrello.push(item);
 	}
 	// Salva cookie (scadenza 7 giorni)
-	document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello))}; path=/; max-age=${60*60*24*7}`;
+	document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello))}; path=/; max-age=${604800}`;
 	alert('Prodotto salvato nel carrello!');
 }
 </script>
