@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 
 const categorie = ref([]);
 const prodotti = ref([]);
+const quantitaProdotti = ref({});
 const categoriaSelezionata = ref(null);
 
 // Carica tutte le categorie all'avvio
@@ -21,10 +22,52 @@ async function caricaProdotti(idCategoria) {
 	try {
 		const res = await fetch(`http://localhost:3000/api/prodotti/categoria/${idCategoria}`);
 		prodotti.value = await res.json();
+		// Reset quantità per i nuovi prodotti
+		quantitaProdotti.value = {};
 	} catch (err) {
 		console.error('Errore nel fetch prodotti:', err);
 		prodotti.value = [];
+		quantitaProdotti.value = {};
 	}
+}
+
+function aggiornaQuantita(nomeProdotto, valore) {
+	quantitaProdotti.value = {
+		...quantitaProdotti.value,
+		[nomeProdotto]: valore
+	};
+}
+
+function salvaInCookie(prodotto) {
+	const quantita = quantitaProdotti.value[prodotto.Nome] || '';
+	if (!quantita || isNaN(quantita) || quantita <= 0) {
+		alert('Inserisci una quantità valida per il prodotto.');
+		return;
+	}
+	// Crea oggetto da salvare
+	const item = {
+		nome: prodotto.Nome,
+		prezzo: prodotto.Prezzo,
+		quantita: Number(quantita)
+	};
+	// Recupera cookie esistente
+	let carrello = [];
+	const cookie = document.cookie.split('; ').find(row => row.startsWith('carrello='));
+	if (cookie) {
+		try {
+			carrello = JSON.parse(decodeURIComponent(cookie.split('=')[1]));
+		} catch {}
+	}
+	// Aggiorna o aggiungi prodotto (usando nome come chiave)
+	const idx = carrello.findIndex(p => p.nome === item.nome);
+	if (idx !== -1) {
+		carrello[idx].quantita = item.quantita;
+	} else {
+		carrello.push(item);
+	}
+	// Salva cookie (scadenza 7 giorni)
+	document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello))}; path=/; max-age=${60*60*24*7}`;
+	alert('Prodotto salvato nel carrello!');
 }
 </script>
 
@@ -49,9 +92,21 @@ async function caricaProdotti(idCategoria) {
 			<div v-else>
 				<h2>Prodotti</h2>
 				<ul v-if="prodotti.length">
-					<li v-for="prod in prodotti" :key="prod.IdProdotto">
+					<li v-for="prod in prodotti" :key="prod.Nome" class="prodotto-item">
 						<img :src="`/${prod.Immagine}`" alt="" />
-						{{ prod.Nome }} - Prezzo: {{ prod.Prezzo }} €
+						<div class="info-prodotto">
+							<span class="nome-prodotto">{{ prod.Nome }}</span>
+							<span class="prezzo-prodotto">Prezzo: {{ prod.Prezzo }} €</span>
+							<input
+								type="number"
+								min="1"
+								:placeholder="'Quantità'"
+								v-model="quantitaProdotti[prod.Nome]"
+								@input="aggiornaQuantita(prod.Nome, quantitaProdotti[prod.Nome])"
+								class="input-quantita"
+							/>
+							<button @click="salvaInCookie(prod)" class="btn-salva">Salva</button>
+						</div>
 					</li>
 				</ul>
 				<p v-else>Nessun prodotto trovato per questa categoria.</p>
