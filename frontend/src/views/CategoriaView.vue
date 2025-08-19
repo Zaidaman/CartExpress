@@ -103,13 +103,8 @@ function salvaInCookie(prodotto) {
 						<img :src="`/${prod.immagine}`" alt="" />
 						{{ prod.Nome }} - Prezzo: {{ prod.Prezzo }} €
 						<div class="info-prodotto">
-<<<<<<< Updated upstream
-							<span class="nome-prodotto">{{ prod.Nome }}</span>
-							<span class="prezzo-prodotto"> Prezzo: {{ prod.Prezzo }} €</span>
-=======
 							<span class="nome-prodotto">{{ prod.nome }}</span>
 							<span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>
->>>>>>> Stashed changes
 							<input
 								type="number"
 								min="1"
