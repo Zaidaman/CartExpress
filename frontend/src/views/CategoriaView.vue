@@ -22,8 +22,11 @@ async function caricaProdotti(idCategoria) {
 	try {
 		const res = await fetch(`http://localhost:3000/api/prodotti/categoria/${idCategoria}`);
 		prodotti.value = await res.json();
-		// Reset quantità per i nuovi prodotti
+		// Reset quantità per i nuovi prodotti e imposta default a 1
 		quantitaProdotti.value = {};
+		prodotti.value.forEach(prod => {
+			quantitaProdotti.value[prod.Nome] = 1;
+		});
 	} catch (err) {
 		console.error('Errore nel fetch prodotti:', err);
 		prodotti.value = [];
@@ -67,6 +70,8 @@ function salvaInCookie(prodotto) {
 	}
 	// Salva cookie (scadenza 7 giorni)
 	document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello))}; path=/; max-age=${604800}`;
+	// Reset quantità a 1 dopo il salvataggio
+	quantitaProdotti.value[prodotto.Nome] = 1;
 	alert('Prodotto salvato nel carrello!');
 }
 </script>
@@ -96,7 +101,7 @@ function salvaInCookie(prodotto) {
 						<img :src="`/${prod.Immagine}`" alt="" />
 						<div class="info-prodotto">
 							<span class="nome-prodotto">{{ prod.Nome }}</span>
-							<span class="prezzo-prodotto">Prezzo: {{ prod.Prezzo }} €</span>
+							<span class="prezzo-prodotto"> Prezzo: {{ prod.Prezzo }} €</span>
 							<input
 								type="number"
 								min="1"
