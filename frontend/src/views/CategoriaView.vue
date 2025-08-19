@@ -22,12 +22,9 @@ async function caricaProdotti(idCategoria) {
 	try {
 		const res = await fetch(`http://localhost:3000/api/prodotti/categoria/${idCategoria}`);
 		prodotti.value = await res.json();
-<<<<<<< Updated upstream
 		// Reset quantità per i nuovi prodotti e imposta default a 1
-=======
 		console.log('Prodotti ricevuti:', prodotti.value);
 		// Reset quantità per i nuovi prodotti
->>>>>>> Stashed changes
 		quantitaProdotti.value = {};
 		prodotti.value.forEach(prod => {
 			quantitaProdotti.value[prod.Nome] = 1;
