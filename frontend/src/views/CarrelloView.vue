@@ -65,7 +65,7 @@ async function processaTransazione() {
 
 		const data = await res.json();
 		if (data.success) {
-			alert(`Ordine salvato! Grazie ${email.value}`);
+			alert(`Ordine salvato! Grazie ${email.value}. Il tuo ID ordine è: ${data.idOrdine}`);
 
 			// Elimina cookie
 			document.cookie = 'carrello=; path=/; max-age=0';

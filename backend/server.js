@@ -47,22 +47,25 @@ app.get('/api/prodotti/categoria/:idCategoria', async (req, res) => {
 app.post('/api/salvaOrdine', async (req, res) => {
   const { email, prezzoTot, prodotti } = req.body;
   try {
-    console.log('Body ricevuto:', req.body);
-
     if (!email || !prezzoTot || !prodotti) {
       return res.status(400).json({ success: false, error: 'Dati mancanti' });
     }
 
-    console.log('check 1');
+    const [resultQuery] = await pool.query(
+      'SELECT MAX(IdOrdine) + 1 AS IdOrdine FROM ordini'
+    );
+
+    const idOrdine = resultQuery[0].IdOrdine;
 
     await pool.query(
       'INSERT INTO ordini (email, PrezzoTotale, DataCreazione, ListaProdotti) VALUES (?, ?, NOW(), ?)',
       [email, prezzoTot, JSON.stringify(prodotti)]
     );
 
-    console.log('check 2');
-
-    res.json({ success: true });
+    res.json({
+        success: true,
+        idOrdine: idOrdine
+    });
   } catch (err) {
     console.error('Errore salvataggio ordine:', err.message);
     res.status(500).json({ success: false, error: err.message });
