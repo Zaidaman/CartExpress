@@ -9,7 +9,7 @@ const categoriaSelezionata = ref(null);
 // Carica tutte le categorie all'avvio
 onMounted(async () => {
 	try {
-		const res = await fetch('http://localhost:3000/api/testCategorie');
+		const res = await fetch('http://localhost:3000/api/GetCategorie');
 		categorie.value = await res.json();
 	} catch (err) {
 		console.error('Errore nel fetch categorie:', err);
@@ -37,7 +37,7 @@ async function caricaProdotti(idCategoria) {
 }
 
 function aggiornaQuantita(nomeProdotto, valore) {
-  quantitaProdotti[nomeProdotto] = valore;
+	quantitaProdotti[nomeProdotto] = valore;
 }
 
 function salvaInCookie(prodotto) {

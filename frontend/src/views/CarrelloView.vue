@@ -41,13 +41,47 @@ onMounted(() => {
 	leggiCarrelloDaCookie();
 });
 
-function processaTransazione() {
+async function processaTransazione() {
 	if (!email.value || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) {
 		alert("Inserisci un'email valida.");
 		return;
 	}
-	// Qui puoi aggiungere la logica per processare la transazione
-	alert(`Transazione processata per ${email.value}!`);
+
+	if (!carrello.value.length) {
+		alert("Il carrello è vuoto.");
+		return;
+	}
+
+	try {
+		const res = await fetch('http://localhost:3000/api/salvaOrdine', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				email: email.value,
+				prezzoTot: totale.value,
+				prodotti: carrello.value
+			})
+		});
+
+		const data = await res.json();
+		if (data.success) {
+			alert(`Ordine salvato! Grazie ${email.value}`);
+
+			// Elimina cookie
+			document.cookie = 'carrello=; path=/; max-age=0';
+
+			// Svuota carrello locale
+			carrello.value = [];
+			totale.value = 0;
+			totaleProdotti.value = 0;
+			email.value = '';
+		} else {
+			alert('Errore nel salvataggio dell\'ordine.');
+		}
+	} catch (err) {
+		console.error(err);
+		alert('Errore di connessione al server.');
+	}
 }
 </script>
 

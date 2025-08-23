@@ -17,22 +17,7 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-// API Test MySQL
-app.get('/api/testProdotti', async (req, res) => {
-    try {
-        const [rows] = await pool.query('SELECT Nome, Prezzo, Immagine FROM Prodotti');
-        
-        // Stampa i dati sulla console
-        console.log('Dati ricevuti da MySQL:', rows);
-        
-        res.json(rows);
-    } catch (err) {
-        console.error('Errore query MySQL:', err);
-        res.status(500).json({ error: 'Errore nel recupero dati' });
-    }
-});
-
-app.get('/api/testCategorie', async (req, res) => {
+app.get('/api/GetCategorie', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM Categoria');
         console.log('Dati ricevuti da MySQL:', rows);
@@ -58,21 +43,32 @@ app.get('/api/prodotti/categoria/:idCategoria', async (req, res) => {
     }
 });
 
-app.post('/api/login', async (req, res) => {
-    const { Nome, Password } = { Nome: 'MarioRossi', Password: 'pass' }; //req.body; // dati inviati dal frontend
+// API: Salvataggio Ordine
+app.post('/api/salvaOrdine', async (req, res) => {
+  const { email, prezzoTot, prodotti } = req.body;
+  try {
+    console.log('Body ricevuto:', req.body);
 
-    try {
-        const [rows] = await pool.query(
-            'SELECT IdUtente FROM Utente WHERE Nome = ? AND Password <= ?',
-            [Nome, Password] // valori sicuri con placeholders
-        );
-        
-        res.json(rows);
-    } catch (err) {
-        console.error('Errore query MySQL:', err);
-        res.status(500).json({ error: 'Errore nel recupero dati' });
+    if (!email || !prezzoTot || !prodotti) {
+      return res.status(400).json({ success: false, error: 'Dati mancanti' });
     }
+
+    console.log('check 1');
+
+    await pool.query(
+      'INSERT INTO ordini (email, PrezzoTotale, DataCreazione, ListaProdotti) VALUES (?, ?, NOW(), ?)',
+      [email, prezzoTot, JSON.stringify(prodotti)]
+    );
+
+    console.log('check 2');
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Errore salvataggio ordine:', err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
 });
+
 
 // Avvia server
 const PORT = 3000;
