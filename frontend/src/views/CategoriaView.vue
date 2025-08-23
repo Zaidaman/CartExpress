@@ -1,9 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 
 const categorie = ref([]);
 const prodotti = ref([]);
-const quantitaProdotti = ref({});
+const quantitaProdotti = reactive({});
 const categoriaSelezionata = ref(null);
 
 // Carica tutte le categorie all'avvio
@@ -25,9 +25,9 @@ async function caricaProdotti(idCategoria) {
 		// Reset quantità per i nuovi prodotti e imposta default a 1
 		console.log('Prodotti ricevuti:', prodotti.value);
 		// Reset quantità per i nuovi prodotti
-		quantitaProdotti.value = {};
-		prodotti.value.forEach(prod => {
-			quantitaProdotti.value[prod.Nome] = 1;
+		for (const key in quantitaProdotti) delete quantitaProdotti[key]; // svuota l'oggetto
+			prodotti.value.forEach(prod => {
+			quantitaProdotti[prod.nome] = 1;
 		});
 	} catch (err) {
 		console.error('Errore nel fetch prodotti:', err);
@@ -37,14 +37,11 @@ async function caricaProdotti(idCategoria) {
 }
 
 function aggiornaQuantita(nomeProdotto, valore) {
-	quantitaProdotti.value = {
-		...quantitaProdotti.value,
-		[nomeProdotto]: valore
-	};
+  quantitaProdotti[nomeProdotto] = valore;
 }
 
 function salvaInCookie(prodotto) {
-	const quantita = quantitaProdotti.value[prodotto.Nome] || '';
+	const quantita = quantitaProdotti[prodotto.nome] || 1;
 	if (!quantita || isNaN(quantita) || quantita <= 0) {
 		alert('Inserisci una quantità valida per il prodotto.');
 		return;
@@ -73,7 +70,7 @@ function salvaInCookie(prodotto) {
 	// Salva cookie (scadenza 7 giorni)
 	document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello))}; path=/; max-age=${604800}`;
 	// Reset quantità a 1 dopo il salvataggio
-	quantitaProdotti.value[prodotto.Nome] = 1;
+	quantitaProdotti[prodotto.nome] = 1;
 	alert('Prodotto salvato nel carrello!');
 }
 </script>
