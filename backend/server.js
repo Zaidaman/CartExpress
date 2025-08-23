@@ -17,7 +17,7 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-app.get('/api/GetCategorie', async (req, res) => {
+app.get('/api/prodotti/GetCategorie', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM Categoria');
         console.log('Dati ricevuti da MySQL:', rows);
@@ -44,7 +44,7 @@ app.get('/api/prodotti/categoria/:idCategoria', async (req, res) => {
 });
 
 // API: Salvataggio Ordine
-app.post('/api/salvaOrdine', async (req, res) => {
+app.post('/api/carrello/salvaOrdine', async (req, res) => {
   const { email, prezzoTot, prodotti } = req.body;
   try {
     if (!email || !prezzoTot || !prodotti) {
@@ -72,6 +72,19 @@ app.post('/api/salvaOrdine', async (req, res) => {
   }
 });
 
+app.get('/api/carrello/getOrdine/:idOrdine', async (req, res) => {
+    const { idOrdine } = req.params;
+    try {
+        const [rows] = await pool.query(
+            'SELECT * FROM ordini WHERE idOrdine = ?',
+            [idOrdine]
+        );
+        res.json(rows);
+    } catch (err) {
+        console.error('Errore query MySQL:', err);
+        res.status(500).json({ error: 'Errore nel recupero dati' });
+    }
+});
 
 // Avvia server
 const PORT = 3000;

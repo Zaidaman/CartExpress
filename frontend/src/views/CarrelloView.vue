@@ -53,7 +53,7 @@ async function processaTransazione() {
 	}
 
 	try {
-		const res = await fetch('http://localhost:3000/api/salvaOrdine', {
+		const res = await fetch('http://localhost:3000/api/carrello/salvaOrdine', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify({

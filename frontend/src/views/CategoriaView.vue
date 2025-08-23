@@ -9,7 +9,7 @@ const categoriaSelezionata = ref(null);
 // Carica tutte le categorie all'avvio
 onMounted(async () => {
 	try {
-		const res = await fetch('http://localhost:3000/api/GetCategorie');
+		const res = await fetch('http://localhost:3000/api/prodotti/GetCategorie');
 		categorie.value = await res.json();
 	} catch (err) {
 		console.error('Errore nel fetch categorie:', err);
