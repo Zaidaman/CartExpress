@@ -20,7 +20,6 @@ const pool = mysql.createPool({
 app.get('/api/prodotti/GetCategorie', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM Categoria');
-        console.log('Dati ricevuti da MySQL:', rows);
         res.json(rows);
     } catch (err) {
         console.error('Errore query MySQL:', err);
