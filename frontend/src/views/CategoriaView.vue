@@ -71,11 +71,37 @@ function salvaInCookie(prodotto) {
 	document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello))}; path=/; max-age=${604800}`;
 	// Reset quantità a 1 dopo il salvataggio
 	quantitaProdotti[prodotto.nome] = 1;
-	alert('Prodotto salvato nel carrello!');
+	mostraNotifica('Prodotto salvato nel carrello!');
+}
+
+function mostraNotifica(messaggio) {
+    const container = document.getElementById('notifica-container');
+
+    const notifica = document.createElement('div');
+    notifica.textContent = messaggio;
+    notifica.style.background = '#2d8cf0';
+    notifica.style.color = '#fff';
+    notifica.style.padding = '10px 16px';
+    notifica.style.marginBottom = '10px';
+    notifica.style.borderRadius = '8px';
+    notifica.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+    notifica.style.opacity = '1';
+    notifica.style.transition = 'opacity 0.5s ease';
+
+    container.appendChild(notifica);
+
+    // Rimuovi dopo 3 secondi con fade-out
+    setTimeout(() => {
+        notifica.style.opacity = '0';
+        setTimeout(() => {
+            container.removeChild(notifica);
+        }, 500);
+    }, 3000);
 }
 </script>
 
 <template>
+	<div id="notifica-container" style="position: fixed;top: 20px;right: 20px;z-index: 9999;"></div>
 	<div class="categorie-prodotti-wrapper">
 		<div class="categorie-container">
 			<h2>Categorie</h2>
