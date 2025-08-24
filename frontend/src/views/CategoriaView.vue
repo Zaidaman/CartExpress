@@ -123,8 +123,7 @@ function mostraNotifica(messaggio) {
 				<h2>Prodotti</h2>
 				<ul v-if="prodotti.length">
 					<li v-for="prod in prodotti" :key="prod.nome" class="prodotto-item">
-						<img :src="`/${prod.immagine}`" alt="" />
-						{{ prod.Nome }} - Prezzo: {{ prod.Prezzo }} €
+						<img :src="`/${prod.immagine}`" alt="" />						
 						<div class="info-prodotto">
 							<span class="nome-prodotto">{{ prod.nome }}</span>
 							<span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>

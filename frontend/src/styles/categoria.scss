@@ -1,4 +1,17 @@
 
+// Spazio tra nome prodotto e prezzo
+.nome-prodotto {
+	margin-right: 1em;
+}
+
+.prezzo-prodotto {
+	margin-right: 0.5em;
+}
+
+body {
+	min-height: 100vh;
+	background: #c46000;
+}
 
 .categorie-prodotti-wrapper {
 	display: flex;
@@ -8,7 +21,7 @@
 	gap: 2rem;
 	background: transparent;
 	max-width: 1200px;
-	margin-left: 0;
+	margin-left: auto;
 	margin-right: auto;
 	padding: 0;
 	box-shadow: none;
