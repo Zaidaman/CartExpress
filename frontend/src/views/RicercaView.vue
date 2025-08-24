@@ -12,8 +12,8 @@
     </div>
     <div class="ordine-container" v-if="ordine">
       <h3>Dettagli Ordine</h3>
-      <p><strong>ID Ordine:</strong> {{ ordine.idOrdine }}</p>
-      <p><strong>Email:</strong> {{ ordine.email }}</p>
+      <p><strong>ID Ordine:</strong> {{ ordine.IdOrdine }}</p>
+      <p><strong>Email:</strong> {{ ordine.Email }}</p>
       <p><strong>Prezzo Totale:</strong> {{ ordine.PrezzoTotale }} €</p>
       <p><strong>Data Creazione:</strong> {{ ordine.DataCreazione }}</p>
       <div>

@@ -50,6 +50,6 @@ INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine, IdCategoria) VALUES
 
 -- Inserimento Ordine Carrello
 INSERT INTO Ordini (Email, PrezzoTotale, DataCreazione, ListaProdotti)
-VALUES ('pippo@gmail.com', 2.00, '2025-08-16 14:30:00', 'Mela 4 0.50 2.00');
+VALUES ('pippo@gmail.com', 2.00, '2025-08-16 14:30:00', '[{"nome":"Olio di oliva","prezzo":5,"quantita":1},{"nome":"Banana","prezzo":0.7,"quantita":3},{"nome":"Latte","prezzo":1.3,"quantita":2}]');
 
 -- Formazione ListaProdotti: Nome Quantità Prezzo PrezzoSubTotale

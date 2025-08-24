@@ -76,9 +76,10 @@ app.get('/api/carrello/getOrdine/:idOrdine', async (req, res) => {
     const { idOrdine } = req.params;
     try {
         const [rows] = await pool.query(
-            'SELECT * FROM ordini WHERE idOrdine = ?',
+            'SELECT IdOrdine, Email, PrezzoTotale, CAST(DataCreazione AS NCHAR) AS DataCreazione, ListaProdotti FROM ordini WHERE idOrdine = ?',
             [idOrdine]
         );
+
         res.json(rows);
     } catch (err) {
         console.error('Errore query MySQL:', err);
