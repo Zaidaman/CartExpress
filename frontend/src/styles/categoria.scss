@@ -24,7 +24,7 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	padding: 0;
-	padding-left: 260px;
+	
 	box-shadow: none;
 }
 
@@ -76,7 +76,8 @@ body {
 
 @media (max-width: 900px) {
 	.categorie-prodotti-wrapper {
-		flex-direction: column;
+		flex-direction: row;
+		overflow-x: auto;
 		gap: 1rem;
 		max-width: 98vw;
 		padding: 0;
