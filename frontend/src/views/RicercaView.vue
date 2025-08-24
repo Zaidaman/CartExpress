@@ -12,8 +12,8 @@
     </div>
     <div class="ordine-container" v-if="ordine">
       <h3>Dettagli Ordine</h3>
-      <p><strong>ID Ordine:</strong> {{ ordine.idOrdine }}</p>
-      <p><strong>Email:</strong> {{ ordine.email }}</p>
+      <p><strong>ID Ordine:</strong> {{ ordine.IdOrdine }}</p>
+      <p><strong>Email:</strong> {{ ordine.Email }}</p>
       <p><strong>Prezzo Totale:</strong> {{ ordine.PrezzoTotale }} €</p>
       <p><strong>Data Creazione:</strong> {{ ordine.DataCreazione }}</p>
       <div>
@@ -72,52 +72,6 @@ export default {
 };
 </script>
 
-<style scoped>
-.ricerca-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 40px;
-}
-.input-container {
-  background: #f5f5f5;
-  padding: 24px 32px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  margin-bottom: 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.input-container input {
-  margin: 12px 0;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-.input-container button {
-  padding: 8px 18px;
-  border: none;
-  border-radius: 6px;
-  background: #2d8cf0;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.input-container button:hover {
-  background: #1a6fb3;
-}
-.ordine-container {
-  background: #fff;
-  padding: 24px 32px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-  min-width: 320px;
-}
-.errore {
-  color: #d32f2f;
-  margin-top: 16px;
-}
+<style lang="scss" scoped>
+@import "../styles/search.scss";
 </style>
