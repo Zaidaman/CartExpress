@@ -24,25 +24,23 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	padding: 0;
+	padding-left: 260px;
 	box-shadow: none;
 }
 
 .categorie-container {
-	//position: sticky;
-	top: 30px;
-	left: 0;
-	align-self: flex-start;
-	min-width: 220px;
-	max-width: 260px;
-	width: 220px;
-	background: #f7f7f7;
-	padding: 1.5rem 1rem 1.5rem 0.5rem;
-	border-radius: 0 16px 16px 0;
-	box-shadow: 2px 0 12px rgba(0,0,0,0.04);
-	height: fit-content;
-	margin-left: 0;
-	margin-right: 2.5rem;
-	border-right: 2px solid #e0e0e0;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    min-width: 220px;
+    max-width: 260px;
+    width: 220px;
+    background: #f7f7f7;
+    padding: 1.5rem 1rem 1.5rem 0.5rem;
+    border-radius: 0 16px 16px 0;
+    box-shadow: 2px 0 12px rgba(0,0,0,0.04);
+    height: fit-content;
+    border-right: 2px solid #e0e0e0;
 }
 
 .prodotti-container {
