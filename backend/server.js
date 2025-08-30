@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise'); // versione Promise
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
@@ -69,14 +70,14 @@ app.post('/api/carrello/salvaOrdine', async (req, res) => {
             port: 465,
             secure: true,
             auth: {
-                user: 'lucavigno2003@gmail.com', // Cambia con la tua email
-                pass: 'rlbs fqvd zwgc bbsc', // Cambia con la tua password/app password
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
             },
         });
 
         // Componi il messaggio
         let mailOptions = {
-            from: 'CartExpress <lucavigno2003@gmail.com>',
+            from: `CartExpress <${process.env.SMTP_USER}>`,
             to: email,
             subject: 'Conferma ordine CartExpress',
             text: `Grazie per il tuo ordine!\nID ordine: ${idOrdine}\nTotale: €${prezzoTot}\n\nProdotti: ${prodotti.map(p => `\n- ${p.nome} x${p.quantita}`).join('')}\n\nA presto su CartExpress!`,
