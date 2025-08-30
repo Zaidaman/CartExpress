@@ -126,5 +126,5 @@ async function processaTransazione() {
 </template>
 
 <style lang="scss" scoped>
-@import '../styles/carrello.scss';
+@use '../styles/carrello.scss' as *;
 </style>

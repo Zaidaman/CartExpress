@@ -147,5 +147,5 @@ function mostraNotifica(messaggio) {
 
 
 <style lang="scss" scoped>
-@import '../styles/categoria.scss';
+@use '../styles/categoria.scss' as *;
 </style>
