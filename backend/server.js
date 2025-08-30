@@ -116,6 +116,54 @@ app.get('/api/carrello/getOrdine/:idOrdine', async (req, res) => {
     }
 });
 
+// Ottieni recensioni di un prodotto
+app.get('/api/recensioni/:nomeProdotto', async (req, res) => {
+    const { nomeProdotto } = req.params;
+    try {
+        const [rows] = await pool.query(
+            'SELECT Voto, LEFT(Commento, 50) AS Commento, DataCreazione FROM Recensioni WHERE NomeProdotto = ? ORDER BY DataCreazione DESC',
+            [nomeProdotto]
+        );
+        res.json(rows);
+    } catch (err) {
+        console.error('Errore nel recupero recensioni:', err);
+        res.status(500).json({ error: 'Errore nel recupero recensioni' });
+    }
+});
+
+// Ottieni media delle recensioni
+app.get('/api/recensioni/media/:nomeProdotto', async (req, res) => {
+    const { nomeProdotto } = req.params;
+    try {
+        const [rows] = await pool.query(
+            'SELECT ROUND(AVG(Voto), 1) AS media FROM Recensioni WHERE NomeProdotto = ?',
+            [nomeProdotto]
+        );
+        res.json(rows[0]);
+    } catch (err) {
+        console.error('Errore nel calcolo media:', err);
+        res.status(500).json({ error: 'Errore nel calcolo media' });
+    }
+});
+
+// Aggiungi una nuova recensione
+app.post('/api/recensioni', async (req, res) => {
+    const { nomeProdotto, voto, commento } = req.body;
+    try {
+        if (!nomeProdotto || !voto) {
+            return res.status(400).json({ error: 'Dati mancanti' });
+        }
+        await pool.query(
+            'INSERT INTO Recensioni (NomeProdotto, Voto, Commento) VALUES (?, ?, ?)',
+            [nomeProdotto, voto, commento || null]
+        );
+        res.json({ success: true, message: 'Recensione aggiunta con successo' });
+    } catch (err) {
+        console.error('Errore inserimento recensione:', err);
+        res.status(500).json({ error: 'Errore nel salvataggio della recensione' });
+    }
+});
+
 // Avvia server
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Backend avviato su http://localhost:${PORT}`));

@@ -146,3 +146,24 @@ img {
     padding: 2px 6px;
     font-size: 1em;
 }
+
+.stelle {
+    cursor: pointer;
+    font-size: 24px;
+    color: #ccc;
+
+    .active {
+        color: gold;
+    }
+}
+
+.lista-recensioni {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #444;
+}
+
+.media-voto {
+    margin-bottom: 6px;
+    font-weight: bold;
+}
