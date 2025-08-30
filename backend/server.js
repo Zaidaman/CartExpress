@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise'); // versione Promise
+const nodemailer = require('nodemailer');
 
 const app = express();
 app.use(cors());
@@ -44,31 +45,60 @@ app.get('/api/prodotti/categoria/:idCategoria', async (req, res) => {
 
 // API: Salvataggio Ordine
 app.post('/api/carrello/salvaOrdine', async (req, res) => {
-  const { email, prezzoTot, prodotti } = req.body;
-  try {
-    if (!email || !prezzoTot || !prodotti) {
-      return res.status(400).json({ success: false, error: 'Dati mancanti' });
+    const { email, prezzoTot, prodotti } = req.body;
+    try {
+        if (!email || !prezzoTot || !prodotti) {
+            return res.status(400).json({ success: false, error: 'Dati mancanti' });
+        }
+
+        const [resultQuery] = await pool.query(
+            'SELECT MAX(IdOrdine) + 1 AS IdOrdine FROM ordini'
+        );
+
+        const idOrdine = resultQuery[0].IdOrdine;
+
+        await pool.query(
+            'INSERT INTO ordini (email, PrezzoTotale, DataCreazione, ListaProdotti) VALUES (?, ?, NOW(), ?)',
+            [email, prezzoTot, JSON.stringify(prodotti)]
+        );
+
+        // Invio email di conferma ordine
+        // Configura il trasportatore (modifica con le tue credenziali SMTP)
+        let transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 465,
+            secure: true,
+            auth: {
+                user: 'lucavigno2003@gmail.com', // Cambia con la tua email
+                pass: 'rlbs fqvd zwgc bbsc', // Cambia con la tua password/app password
+            },
+        });
+
+        // Componi il messaggio
+        let mailOptions = {
+            from: 'CartExpress <lucavigno2003@gmail.com>',
+            to: email,
+            subject: 'Conferma ordine CartExpress',
+            text: `Grazie per il tuo ordine!\nID ordine: ${idOrdine}\nTotale: €${prezzoTot}\n\nProdotti: ${prodotti.map(p => `\n- ${p.nome} x${p.quantita}`).join('')}\n\nA presto su CartExpress!`,
+        };
+
+        // Invia la mail (non blocca la risposta all'utente)
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error('Errore invio email:', error);
+            } else {
+                console.log('Email inviata:', info.response);
+            }
+        });
+
+        res.json({
+                success: true,
+                idOrdine: idOrdine
+        });
+    } catch (err) {
+        console.error('Errore salvataggio ordine:', err.message);
+        res.status(500).json({ success: false, error: err.message });
     }
-
-    const [resultQuery] = await pool.query(
-      'SELECT MAX(IdOrdine) + 1 AS IdOrdine FROM ordini'
-    );
-
-    const idOrdine = resultQuery[0].IdOrdine;
-
-    await pool.query(
-      'INSERT INTO ordini (email, PrezzoTotale, DataCreazione, ListaProdotti) VALUES (?, ?, NOW(), ?)',
-      [email, prezzoTot, JSON.stringify(prodotti)]
-    );
-
-    res.json({
-        success: true,
-        idOrdine: idOrdine
-    });
-  } catch (err) {
-    console.error('Errore salvataggio ordine:', err.message);
-    res.status(500).json({ success: false, error: err.message });
-  }
 });
 
 app.get('/api/carrello/getOrdine/:idOrdine', async (req, res) => {
