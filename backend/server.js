@@ -68,8 +68,8 @@ app.post('/api/carrello/salvaOrdine', async (req, res) => {
             port: 465,
             secure: true,
             auth: {
-                user: 'lucavigno2003@gmail.com', // Cambia con la tua email
-                pass: 'rlbs fqvd zwgc bbsc', // Cambia con la tua password/app password
+                user: process.env.SMTP_USER,
+                pass: process.env.SMTP_PASS,
             },
         });
 
