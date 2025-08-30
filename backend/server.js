@@ -61,16 +61,14 @@ app.post('/api/carrello/salvaOrdine', async (req, res) => {
             'INSERT INTO ordini (email, PrezzoTotale, DataCreazione, ListaProdotti) VALUES (?, ?, NOW(), ?)',
             [email, prezzoTot, JSON.stringify(prodotti)]
         );
-
-        // Invio email di conferma ordine
-        // Configura il trasportatore (modifica con le tue credenziali SMTP)
+        
         let transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
             secure: true,
             auth: {
-                user: 'lucavigno2003@gmail.com', // Cambia con la tua email
-                pass: 'rlbs fqvd zwgc bbsc', // Cambia con la tua password/app password
+                user: 'lucavigno2003@gmail.com',
+                pass: 'rlbs fqvd zwgc bbsc',
             },
         });
 
