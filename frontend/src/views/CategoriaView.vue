@@ -29,6 +29,9 @@ async function caricaProdotti(idCategoria) {
 			prodotti.value.forEach(prod => {
 			quantitaProdotti[prod.nome] = 1;
 		});
+		prodotti.value.forEach(prod => {
+    caricaRecensioni(prod.nome);
+});
 	} catch (err) {
 		console.error('Errore nel fetch prodotti:', err);
 		prodotti.value = [];
@@ -98,6 +101,42 @@ function mostraNotifica(messaggio) {
         }, 500);
     }, 3000);
 }
+
+const recensioni = reactive({});
+const mediaRecensioni = reactive({});
+const hoverVoto = reactive({});
+const votoSelezionato = reactive({});
+
+// Carica recensioni e media per un prodotto
+async function caricaRecensioni(nomeProdotto) {
+    try {
+        const resRecensioni = await fetch(`http://localhost:3000/api/recensioni/${nomeProdotto}`);
+        recensioni[nomeProdotto] = await resRecensioni.json();
+
+        const resMedia = await fetch(`http://localhost:3000/api/recensioni/media/${nomeProdotto}`);
+        const mediaData = await resMedia.json();
+        mediaRecensioni[nomeProdotto] = mediaData.media || 0;
+    } catch (err) {
+        console.error('Errore caricamento recensioni:', err);
+    }
+}
+
+// Lascia recensione
+async function lasciaRecensione(nomeProdotto, voto) {
+    votoSelezionato[nomeProdotto] = voto;
+    const commento = prompt('Inserisci un commento (opzionale, MAX 50 Caratteri):');
+    try {
+        await fetch('http://localhost:3000/api/recensioni', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nomeProdotto, voto, commento })
+        });
+        mostraNotifica('Recensione inviata con successo!');
+        caricaRecensioni(nomeProdotto);
+    } catch (err) {
+        console.error('Errore salvataggio recensione:', err);
+    }
+}
 </script>
 
 <template>
@@ -123,21 +162,34 @@ function mostraNotifica(messaggio) {
 				<h2>Prodotti</h2>
 				<ul v-if="prodotti.length">
 					<li v-for="prod in prodotti" :key="prod.nome" class="prodotto-item">
-						<img :src="`/${prod.immagine}`" alt="" />						
-						<div class="info-prodotto">
-							<span class="nome-prodotto">{{ prod.nome }}</span>
-							<span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>
-							<input
-								type="number"
-								min="1"
-								:placeholder="'Quantità'"
-								v-model="quantitaProdotti[prod.nome]"
-								@input="aggiornaQuantita(prod.nome, quantitaProdotti[prod.nome])"
-								class="input-quantita"
-							/>
-							<button @click="salvaInCookie(prod)" class="btn-salva">Salva</button>
-						</div>
+					<img :src="`/${prod.immagine}`" alt="" />
+					<div class="info-prodotto">
+						<span class="nome-prodotto">{{ prod.nome }}</span>
+						<span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>
+						
+						<!-- Quantità -->
+						<input type="number" min="1" v-model="quantitaProdotti[prod.nome]" @input="aggiornaQuantita(prod.nome, quantitaProdotti[prod.nome])" class="input-quantita" />
+						<button @click="salvaInCookie(prod)" class="btn-salva">Salva</button>
+
+						<!-- Recensioni -->
+						<div class="recensioni-container">
+							<div class="media-voto">Media: {{ mediaRecensioni[prod.nome] || 'N/A' }} ⭐</div>
+							<div class="stelle" @mouseleave="hoverVoto[prod.nome]=0">
+								<span v-for="i in 5" :key="i" 
+									:class="{ active: i <= (hoverVoto[prod.nome] || votoSelezionato[prod.nome] || 0) }"
+									@mouseover="hoverVoto[prod.nome]=i"
+									@click="lasciaRecensione(prod.nome, i)">
+									★
+								</span>
+							</div>
+				<ul class="lista-recensioni">
+					<li v-for="r in (recensioni[prod.nome]?.slice(0, 3) || [])" :key="r.DataCreazione">
+						<strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
 					</li>
+							</ul>
+						</div>
+					</div>
+				</li>
 				</ul>
 				<p v-else>Nessun prodotto trovato per questa categoria.</p>
 			</div>

@@ -1,3 +1,5 @@
+
+
 CREATE DATABASE CARTEXPRESS;
 USE CartExpress;
 
@@ -23,7 +25,15 @@ CREATE TABLE Ordini (
     Email VARCHAR(150) NOT NULL,
     PrezzoTotale DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     DataCreazione DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    ListaProdotti VARCHAR(4000) NOT NULL 
+    ListaProdotti VARCHAR(4000) NOT NULL
+);
+
+CREATE TABLE Recensioni (
+    Id INT AUTO_INCREMENT PRIMARY KEY,
+    NomeProdotto VARCHAR(255) NOT NULL,
+    Voto INT CHECK (Voto BETWEEN 1 AND 5),
+    Commento TEXT,
+    DataCreazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 USE CartExpress;
@@ -52,4 +62,33 @@ INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine, IdCategoria) VALUES
 INSERT INTO Ordini (Email, PrezzoTotale, DataCreazione, ListaProdotti)
 VALUES ('pippo@gmail.com', 2.00, '2025-08-16 14:30:00', '[{"nome":"Olio di oliva","prezzo":5,"quantita":1},{"nome":"Banana","prezzo":0.7,"quantita":3},{"nome":"Latte","prezzo":1.3,"quantita":2}]');
 
--- Formazione ListaProdotti: Nome Quantità Prezzo PrezzoSubTotale
+INSERT INTO Recensioni (NomeProdotto, Voto, Commento) VALUES
+-- Mela
+('Mela', 5, 'Ottima qualità, molto dolce e fresca'),
+('Mela', 4, 'Buona ma un po’ piccola'),
+('Mela', 3, NULL),
+
+-- Banana
+('Banana', 5, 'Banane perfette per smoothie'),
+('Banana', 4, NULL),
+('Banana', 2, 'Un po’ troppo mature per i miei gusti'),
+
+-- Farfalle
+('Farfalle', 4, 'Pasta di buona qualità, tiene bene la cottura'),
+('Farfalle', 3, NULL),
+
+-- Latte
+('Latte', 5, 'Fresco e con un buon sapore'),
+('Latte', 2, 'Non mi è piaciuto il sapore'),
+
+-- Uova
+('Uova', 4, 'Ottime per fare dolci'),
+('Uova', 3, NULL),
+
+-- Biscotti
+('Biscotti', 5, 'Deliziosi! Perfetti con il tè'),
+('Biscotti', 4, NULL),
+
+-- Pomodori
+('Pomodori', 4, 'Pomodori freschi e saporiti'),
+('Pomodori', 2, NULL)
