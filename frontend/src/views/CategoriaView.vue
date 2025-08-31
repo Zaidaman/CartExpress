@@ -106,6 +106,7 @@ const recensioni = reactive({});
 const mediaRecensioni = reactive({});
 const hoverVoto = reactive({});
 const votoSelezionato = reactive({});
+const mostraListaRecensioni = reactive({});
 
 // Carica recensioni e media per un prodotto
 async function caricaRecensioni(nomeProdotto) {
@@ -173,7 +174,7 @@ async function lasciaRecensione(nomeProdotto, voto) {
 
 						<!-- Recensioni -->
 						<div class="recensioni-container">
-							<div class="media-voto">Media: {{ mediaRecensioni[prod.nome] || 'N/A' }} ⭐</div>
+							<div class="media-voto">Valutazione: {{ mediaRecensioni[prod.nome] || 'N/A' }} ⭐</div>
 							<div class="stelle" @mouseleave="hoverVoto[prod.nome]=0">
 								<span v-for="i in 5" :key="i" 
 									:class="{ active: i <= (hoverVoto[prod.nome] || votoSelezionato[prod.nome] || 0) }"
@@ -182,11 +183,21 @@ async function lasciaRecensione(nomeProdotto, voto) {
 									★
 								</span>
 							</div>
-				<ul class="lista-recensioni">
-					<li v-for="r in (recensioni[prod.nome]?.slice(0, 3) || [])" :key="r.DataCreazione">
-						<strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
-					</li>
-							</ul>
+							<button @click="mostraListaRecensioni[prod.nome] = !mostraListaRecensioni[prod.nome]" style="margin-top: 8px; margin-bottom: 0.5em;">
+								{{ mostraListaRecensioni[prod.nome] ? 'Nascondi recensioni' : 'Mostra recensioni' }}
+							</button>
+																			<!-- Overlay recensioni -->
+																			<div v-if="mostraListaRecensioni[prod.nome]" class="recensioni-overlay">
+																				<div class="recensioni-panel">
+																					<button class="close-btn" @click="mostraListaRecensioni[prod.nome] = false">×</button>
+																					<h3>Recensioni per {{ prod.nome }}</h3>
+																					<ul class="lista-recensioni">
+																						<li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
+																							<strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
+																						</li>
+																					</ul>
+																				</div>
+																			</div>
 						</div>
 					</div>
 				</li>
