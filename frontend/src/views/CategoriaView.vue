@@ -106,7 +106,7 @@ const recensioni = reactive({});
 const mediaRecensioni = reactive({});
 const hoverVoto = reactive({});
 const votoSelezionato = reactive({});
-const mostraListaRecensioni = reactive({});
+const prodottoAperto = ref(null);
 
 // Carica recensioni e media per un prodotto
 async function caricaRecensioni(nomeProdotto) {
@@ -183,21 +183,20 @@ async function lasciaRecensione(nomeProdotto, voto) {
 									★
 								</span>
 							</div>
-							<button @click="mostraListaRecensioni[prod.nome] = !mostraListaRecensioni[prod.nome]" style="margin-top: 8px; margin-bottom: 0.5em;">
-								{{ mostraListaRecensioni[prod.nome] ? 'Nascondi recensioni' : 'Mostra recensioni' }}
+							<button @click="prodottoAperto = (prodottoAperto === prod.nome ? null : prod.nome)">
+								{{ prodottoAperto === prod.nome ? 'Nascondi recensioni' : 'Mostra recensioni' }}
 							</button>
-																			<!-- Overlay recensioni -->
-																			<div v-if="mostraListaRecensioni[prod.nome]" class="recensioni-overlay">
-																				<div class="recensioni-panel">
-																					<button class="close-btn" @click="mostraListaRecensioni[prod.nome] = false">×</button>
-																					<h3>Recensioni per {{ prod.nome }}</h3>
-																					<ul class="lista-recensioni">
-																						<li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
-																							<strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
-																						</li>
-																					</ul>
-																				</div>
-																			</div>
+							<div v-if="prodottoAperto === prod.nome" class="recensioni-overlay">
+								<div class="recensioni-panel">
+									<button class="close-btn" @click="prodottoAperto = null">×</button>
+									<h3>Recensioni per {{ prod.nome }}</h3>
+									<ul class="lista-recensioni">
+										<li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
+											<strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
+										</li>
+									</ul>
+								</div>
+							</div>
 						</div>
 					</div>
 				</li>
