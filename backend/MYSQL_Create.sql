@@ -49,14 +49,33 @@ INSERT INTO Categoria (Nome, Immagine) VALUES
 INSERT INTO Prodotti (Nome, Quantita, Prezzo, Immagine, IdCategoria) VALUES
 ('Mela', 100, 0.50, 'img/prod/mela.png', 1),
 ('Banana', 80, 0.70, 'img/prod/banana.png', 1),
+('Kiwi', 50, 1.00, 'img/prod/kiwi.png', 1),
+('Pera', 60, 0.80, 'img/prod/pera.png', 1),
+('Pesca', 40, 1.20, 'img/prod/pesca.png', 1),
+
+('Pomodori', 90, 1.10, 'img/prod/pomodori.png', 2),
+('Cetrioli', 70, 0.90, 'img/prod/cetrioli.png', 2),
+('Carote', 80, 0.80, 'img/prod/carote.png', 2),
+('Zucchine', 60, 1.00, 'img/prod/zucchine.png', 2),
+('Cipolle', 50, 0.60, 'img/prod/cipolle.png', 2),
+
 ('Farfalle', 50, 1.20, 'img/prod/farfalle.png', 3),
+('Penne', 40, 1.00, 'img/prod/penne.png', 3),
+('Spaghetti', 60, 1.50, 'img/prod/spaghetti.png', 3),
+('Fusilli', 50, 1.20, 'img/prod/fusilli.png', 3),
+('Tortiglioni', 40, 1.10, 'img/prod/tortiglioni.png', 3),
+
 ('Alberghiero', 40, 1.00, 'img/prod/alberghiero.png', 4),
+('Biscotti', 45, 1.80, 'img/prod/biscotti.png', 4),
+('Frusta', 50, 2.00, 'img/prod/frusta.png', 4),
+('Ciabatta', 30, 1.50, 'img/prod/ciabatta.png', 4),
+('Grissini', 35, 1.20, 'img/prod/grissini.png', 4),
+
 ('Latte', 60, 1.30, 'img/prod/latte.png', 5),
 ('Uova', 30, 2.50, 'img/prod/uova.png', 5),
-('Biscotti', 45, 1.80, 'img/prod/biscotti.png', 4),
 ('Formaggio', 25, 3.50, 'img/prod/formaggio.png', 5),
-('Pomodori', 90, 1.10, 'img/prod/pomodori.png', 2),
-('Olio di oliva', 20, 5.00, 'img/prod/olio.png', 2);
+('Burro', 20, 2.00, 'img/prod/burro.png', 5),
+('Yogurt', 15, 1.50, 'img/prod/yogurt.png', 5);
 
 -- Inserimento Ordine Carrello
 INSERT INTO Ordini (Email, PrezzoTotale, DataCreazione, ListaProdotti)
