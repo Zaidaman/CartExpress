@@ -29,12 +29,6 @@
 	margin-top: 1rem;
 }
 
-.carrelli-flex {
-	display: flex;
-	gap: 2rem;
-	align-items: center;
-}
-
 .checkout-container {
 	min-width: 300px;
 	background: #f8f8f8;
@@ -84,4 +78,34 @@
 }
 .svuota-btn:hover {
 	background: #c0392b;
+}
+
+.carrelli-flex {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap; // fallback per spazi stretti
+}
+
+/* Su desktop: carrello e checkout affiancati (già presente) */
+/* Su schermi stretti (max 900px): layout verticale con checkout sopra */
+@media (max-width: 900px) {
+  .carrelli-flex {
+    flex-direction: column; /* Impila verticalmente */
+    align-items: center;
+  }
+
+  .checkout-container {
+    order: 1; /* Checkout sopra */
+    width: 100%;
+    max-width: 400px;
+    left: 0; /* Rimuove offset */
+  }
+
+  .carrello-container {
+    order: 2; /* Lista sotto */
+    width: 100%;
+    max-width: 600px;
+  }
 }

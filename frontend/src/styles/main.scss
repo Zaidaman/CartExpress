@@ -82,3 +82,16 @@ nav router-link:hover {
 ul {
   list-style-type: none;
 }
+
+.view-container button {
+  background-color: #C46000;
+  color: #fff;
+  font-size: 1.2rem;
+  padding: 12px 24px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.view-container button:hover {
+  background-color: #a34d00;
+}

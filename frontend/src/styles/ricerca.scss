@@ -43,6 +43,19 @@
   text-align: center;
 }
 
+.ordine-container ul {
+  padding: 0;
+  margin: 16px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.ordine-container li {
+  margin-bottom: 2px;
+}
+
 .errore {
   color: #d32f2f;
   margin-top: 16px;
