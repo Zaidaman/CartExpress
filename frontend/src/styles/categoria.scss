@@ -55,43 +55,68 @@ body {
 	margin: 0;
 }
 
+
 .prodotti-container ul {
-	width: 100%;
-	padding: 0;
-	list-style: none;
+    width: 100%;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5em;
+    align-items: stretch;
+    justify-content: flex-start;
 }
+
 
 
 .prodotti-container li {
     text-align: left;
-    margin-bottom: 1em;
     font-size: 1.1em;
     display: flex;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: stretch;
     gap: 1em;
+    background: #faf9f7;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 1.2em 1em 1em 1em;
+    min-width: 220px;
+    max-width: 260px;
+    min-height: 340px;
+    flex: 1 1 220px;
+    margin: 0;
+    box-sizing: border-box;
 }
 
+
 .prodotti-container li img {
-    margin: 0;
+    margin: 0 auto 0.5em auto;
+    display: block;
+    max-width: 60px;
+    height: auto;
 }
+
 
 .info-prodotto {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
-    gap: 1.5em;
+    gap: 0.7em;
     width: 100%;
+    flex: 1 1 auto;
 }
 
 .info-prodotto > div:not(.recensioni-container) {
     flex-shrink: 0;
 }
 
+
 .recensioni-container {
-    min-width: 180px;
-    max-width: 240px;
-    margin-left: auto;
-    flex: 0 0 200px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    margin-left: 0;
+    flex: 1 1 auto;
 }
 
 @media (max-width: 900px) {
@@ -109,35 +134,59 @@ body {
         border-radius: 16px 16px 0 0;
         box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         margin-bottom: 1rem;
-        //padding: 1rem;
-        //border-right: none;
     }
 
     .categorie-container ul {
         display: flex;
-        flex-wrap: wrap;             /* permette di andare a capo */
-        justify-content: space-between; /* distribuisce lo spazio tra bottoni */
-        gap: 2%;                     /* distanza tra bottoni in percentuale */
+        flex-wrap: wrap;
+        gap: 0.7em;
         padding: 0;
         margin: 0;
         list-style: none;
+        justify-content: center;
     }
 
     .categorie-container li {
-        flex: 0 1 10%;               /* larghezza dei bottoni in percentuale */
+        flex: 0 1 45vw;
+        max-width: 45vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
     }
 
     .categorie-container li button {
+        width: 100%;
+        min-width: 90px;
+        max-width: 100%;
+        height: 70px;
+        min-height: 70px;
+        max-height: 70px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        //padding: 8px 12px;
+        justify-content: center;
         border: none;
         background: #fff;
         border-radius: 8px;
         box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         cursor: pointer;
-        width: 100%;                  /* il button occupa tutta la larghezza del li */
+        box-sizing: border-box;
+        transition: box-shadow 0.2s;
+        overflow: hidden;
+    }
+
+    .categorie-container li button img {
+        max-width: 32px;
+        max-height: 32px;
+        margin-bottom: 0.2em;
+    }
+
+    .categorie-container li button span {
+        font-size: 0.95em;
+        text-align: center;
+        word-break: break-word;
     }
 
     .prodotti-container {
@@ -148,9 +197,78 @@ body {
         align-items: stretch;
     }
 
+    .prodotti-container ul {
+        gap: 1em;
+    }
+
+    .prodotti-container li {
+        min-width: 140px;
+        max-width: 48vw;
+        min-height: 260px;
+        padding: 0.7em 0.5em 0.7em 0.5em;
+    }
+
     h1, h2 {
         font-size: 1.3rem;
     }
+}
+
+// Desktop: bottoni categorie uguali
+// Desktop: bottoni categorie uguali
+.categorie-container ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    justify-content: center;
+}
+
+.categorie-container li {
+    flex: 0 1 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.categorie-container li button {
+    width: 120px;
+    height: 90px;
+    min-width: 120px;
+    min-height: 90px;
+    max-width: 120px;
+    max-height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: box-shadow 0.2s;
+    overflow: hidden;
+}
+
+.categorie-container li button:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
+}
+
+.categorie-container li button img {
+    max-width: 40px;
+    max-height: 40px;
+    margin-bottom: 0.3em;
+}
+
+.categorie-container li button span {
+    font-size: 1em;
+    text-align: center;
+    word-break: break-word;
 }
 
 img {

@@ -73,5 +73,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@use "../styles/search.scss" as *;
+@use "../styles/ricerca.scss" as *;
 </style>
