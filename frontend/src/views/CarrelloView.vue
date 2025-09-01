@@ -83,6 +83,13 @@ async function processaTransazione() {
 		alert('Errore di connessione al server.');
 	}
 }
+
+function svuotaCarrello() {
+	document.cookie = 'carrello=; path=/; max-age=0';
+	carrello.value = [];
+	totale.value = 0;
+	totaleProdotti.value = 0;
+}
 </script>
 
 <template>
@@ -121,6 +128,7 @@ async function processaTransazione() {
 				<input id="email" v-model="email" type="email" placeholder="Inserisci la tua email" />
 			</div>
 			<button class="checkout-btn" @click="processaTransazione">Processa transazione</button>
+			<button class="checkout-btn svuota-btn" @click="svuotaCarrello">Svuota carrello</button>
 		</div>
 	</div>
 </template>

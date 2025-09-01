@@ -32,7 +32,7 @@
 .carrelli-flex {
 	display: flex;
 	gap: 2rem;
-	align-items: flex-start;
+	align-items: center;
 }
 
 .checkout-container {
@@ -44,10 +44,14 @@
 	display: flex;
 	flex-direction: column;
 	gap: 1.2rem;
+	text-align: center;
+	position: relative;
+	left: -30px;
 }
 
 .checkout-container .totale-carrello {
 	font-size: 1.2rem;
+	text-align: center;
 }
 
 .checkout-container .totale-prodotti {
@@ -72,4 +76,12 @@
 }
 .checkout-btn:hover {
 	background: #27ae38;
+}
+
+.svuota-btn {
+	background: #e74c3c;
+	margin-top: 0.5rem;
+}
+.svuota-btn:hover {
+	background: #c0392b;
 }
