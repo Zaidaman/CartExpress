@@ -15,6 +15,7 @@
       <p><strong>ID Ordine:</strong> {{ ordine.IdOrdine }}</p>
       <p><strong>Email:</strong> {{ ordine.Email }}</p>
       <p><strong>Prezzo Totale:</strong> {{ ordine.PrezzoTotale }} €</p>
+      <p><strong>Data Ritiro:</strong> {{ ordine.DataRitiro }}</p>
       <p><strong>Data Creazione:</strong> {{ ordine.DataCreazione }}</p>
       <div>
         <strong>Prodotti:</strong>

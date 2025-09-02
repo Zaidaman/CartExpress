@@ -46,23 +46,65 @@ app.get('/api/prodotti/categoria/:idCategoria', async (req, res) => {
 
 // API: Salvataggio Ordine
 app.post('/api/carrello/salvaOrdine', async (req, res) => {
-    const { email, prezzoTot, prodotti } = req.body;
+    const { email, prezzoTot, prodotti, dataRitiro } = req.body;
+
     try {
-        if (!email || !prezzoTot || !prodotti) {
+        if (!email || !prezzoTot || !prodotti || !dataRitiro) {
             return res.status(400).json({ success: false, error: 'Dati mancanti' });
+        }
+
+        const ritiroDate = new Date(dataRitiro);
+        if (isNaN(ritiroDate.getTime())) {
+            return res.status(400).json({ success: false, error: 'Data ritiro non valida' });
+        }
+
+        const giorni = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
+        const giornoSettimana = giorni[ritiroDate.getDay()];
+
+        const oraRitiro = ritiroDate.toTimeString().slice(0, 5);
+
+        const [orari] = await pool.query(
+            'SELECT OrarioApertura, OrarioChiusura FROM OrariNegozio WHERE Giorno = ?',
+            [giornoSettimana]
+        );
+
+        if (!orari.length) {
+            return res.status(400).json({ success: false, error: 'Orari non trovati per questo giorno' });
+        }
+
+        const { OrarioApertura, OrarioChiusura } = orari[0];
+
+        if (!OrarioApertura || !OrarioChiusura) {
+            return res.status(400).json({ success: false, error: 'Il negozio è chiuso in questo giorno' });
+        }
+
+        // Estrai ora e minuti da oraRitiro
+        const [ritiroH, ritiroM] = oraRitiro.split(':').map(Number);
+        const minutiRitiro = ritiroH * 60 + ritiroM;
+
+        // Estrai ora e minuti da OrarioApertura
+        const [aperturaH, aperturaM] = OrarioApertura.split(':').map(Number);
+        const minutiApertura = aperturaH * 60 + aperturaM;
+
+        // Estrai ora e minuti da OrarioChiusura
+        const [chiusuraH, chiusuraM] = OrarioChiusura.split(':').map(Number);
+        const minutiChiusura = chiusuraH * 60 + chiusuraM;
+
+        // Controllo intervallo
+        if (minutiRitiro < minutiApertura || minutiRitiro > minutiChiusura) {
+            return res.status(400).json({ success: false, error: 'Orario non disponibile per il ritiro' });
         }
 
         const [resultQuery] = await pool.query(
             'SELECT MAX(IdOrdine) + 1 AS IdOrdine FROM ordini'
         );
-
-        const idOrdine = resultQuery[0].IdOrdine;
+        const idOrdine = resultQuery[0].IdOrdine || 1;
 
         await pool.query(
-            'INSERT INTO ordini (email, PrezzoTotale, DataCreazione, ListaProdotti) VALUES (?, ?, NOW(), ?)',
-            [email, prezzoTot, JSON.stringify(prodotti)]
+            'INSERT INTO ordini (email, PrezzoTotale, DataRitiro, DataCreazione, ListaProdotti) VALUES (?, ?, ?, NOW(), ?)',
+            [email, prezzoTot, dataRitiro, JSON.stringify(prodotti)]
         );
-        
+
         let transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
@@ -73,15 +115,18 @@ app.post('/api/carrello/salvaOrdine', async (req, res) => {
             },
         });
 
-        // Componi il messaggio
         let mailOptions = {
             from: `CartExpress <${process.env.SMTP_USER}>`,
             to: email,
             subject: 'Conferma ordine CartExpress',
-            text: `Grazie per il tuo ordine!\nID ordine: ${idOrdine}\nTotale: €${prezzoTot}\n\nProdotti: ${prodotti.map(p => `\n- ${p.nome} x${p.quantita}`).join('')}\n\nA presto su CartExpress!`,
+            text: `Grazie per il tuo ordine!
+            ID ordine: ${idOrdine}
+            Totale: €${prezzoTot}
+            Data ritiro: ${dataRitiro}
+            Prodotti: ${prodotti.map(p => `\n- ${p.nome} x${p.quantita}`).join('')}
+            A presto su CartExpress!`,
         };
 
-        // Invia la mail (non blocca la risposta all'utente)
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.error('Errore invio email:', error);
@@ -90,21 +135,20 @@ app.post('/api/carrello/salvaOrdine', async (req, res) => {
             }
         });
 
-        res.json({
-                success: true,
-                idOrdine: idOrdine
-        });
+        res.json({ success: true, idOrdine: idOrdine });
+
     } catch (err) {
         console.error('Errore salvataggio ordine:', err.message);
         res.status(500).json({ success: false, error: err.message });
     }
 });
 
+
 app.get('/api/carrello/getOrdine/:idOrdine', async (req, res) => {
     const { idOrdine } = req.params;
     try {
         const [rows] = await pool.query(
-            'SELECT IdOrdine, Email, PrezzoTotale, CAST(DataCreazione AS NCHAR) AS DataCreazione, ListaProdotti FROM ordini WHERE idOrdine = ?',
+            'SELECT IdOrdine, Email, PrezzoTotale, CAST(DataRitiro AS NCHAR) AS DataRitiro, CAST(DataCreazione AS NCHAR) AS DataCreazione, ListaProdotti FROM ordini WHERE idOrdine = ?',
             [idOrdine]
         );
 
