@@ -1,3 +1,46 @@
+<script setup>
+import { ref } from 'vue';
+
+const idOrdine = ref('');
+const ordine = ref(null);
+const prodottiOrdine = ref([]);
+const errore = ref('');
+const loading = ref(false);
+
+async function cercaOrdine() {
+  ordine.value = null;
+  prodottiOrdine.value = [];
+  errore.value = '';
+
+  if (!idOrdine.value) {
+    errore.value = 'Inserisci un codice ordine valido.';
+    return;
+  }
+
+  loading.value = true;
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/carrello/getOrdine/${idOrdine.value}`);
+    const data = await response.json();
+
+    if (data && data.length > 0) {
+      ordine.value = data[0];
+      try {
+        prodottiOrdine.value = JSON.parse(ordine.value.ListaProdotti);
+      } catch {
+        prodottiOrdine.value = [];
+      }
+    } else {
+      errore.value = 'Ordine non trovato.';
+    }
+  } catch {
+    errore.value = 'Errore durante la ricerca dell\'ordine.';
+  } finally {
+    loading.value = false;
+  }
+}
+</script>
+
 <template>
   <div class="ricerca-container">
     <div class="input-container">
@@ -10,6 +53,7 @@
       />
       <button @click="cercaOrdine">Cerca</button>
     </div>
+
     <div class="ordine-container" v-if="ordine">
       <h3>Dettagli Ordine</h3>
       <p><strong>ID Ordine:</strong> {{ ordine.IdOrdine }}</p>
@@ -21,57 +65,19 @@
         <strong>Prodotti:</strong>
         <ul>
           <li v-for="(prodotto, idx) in prodottiOrdine" :key="idx">
-            {{ prodotto.nome }} - {{ prodotto.quantita ? prodotto.quantita + 'x ' : '' }}{{ prodotto.prezzo ? prodotto.prezzo + '€' : '' }}
+            {{ prodotto.nome }} -
+            {{ prodotto.quantita ? prodotto.quantita + 'x ' : '' }}
+            {{ prodotto.prezzo ? prodotto.prezzo + '€' : '' }}
           </li>
         </ul>
       </div>
     </div>
+
     <div v-if="errore" class="errore">
       <p>{{ errore }}</p>
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  name: "RicercaView",
-  data() {
-    return {
-      idOrdine: '',
-      ordine: null,
-      prodottiOrdine: [],
-      errore: ''
-    };
-  },
-  methods: {
-    async cercaOrdine() {
-      this.ordine = null;
-      this.prodottiOrdine = [];
-      this.errore = '';
-      if (!this.idOrdine) {
-        this.errore = 'Inserisci un codice ordine valido.';
-        return;
-      }
-      try {
-        const response = await fetch(`http://localhost:3000/api/carrello/getOrdine/${this.idOrdine}`);
-        const data = await response.json();
-        if (data && data.length > 0) {
-          this.ordine = data[0];
-          try {
-            this.prodottiOrdine = JSON.parse(this.ordine.ListaProdotti);
-          } catch (e) {
-            this.prodottiOrdine = [];
-          }
-        } else {
-          this.errore = 'Ordine non trovato.';
-        }
-      } catch (err) {
-        this.errore = 'Errore durante la ricerca dell\'ordine.';
-      }
-    }
-  }
-};
-</script>
 
 <style lang="scss" scoped>
 @use "../styles/ricerca.scss" as *;
