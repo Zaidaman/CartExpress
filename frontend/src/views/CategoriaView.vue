@@ -93,7 +93,6 @@ function mostraNotifica(messaggio) {
 
     container.appendChild(notifica);
 
-    // Rimuovi dopo 3 secondi con fade-out
     setTimeout(() => {
         notifica.style.opacity = '0';
         setTimeout(() => {
@@ -168,11 +167,9 @@ async function lasciaRecensione(nomeProdotto, voto) {
 						<span class="nome-prodotto">{{ prod.nome }}</span>
 						<span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>
 						
-						<!-- Quantità -->
 						<input type="number" min="1" v-model="quantitaProdotti[prod.nome]" @input="aggiornaQuantita(prod.nome, quantitaProdotti[prod.nome])" class="input-quantita" />
 						<button @click="salvaInCookie(prod)" class="btn-salva">Salva</button>
 
-						<!-- Recensioni -->
 						<div class="recensioni-container">
 							<div class="media-voto">Valutazione: {{ mediaRecensioni[prod.nome] || 'N/A' }} ⭐</div>
 							<div class="stelle" @mouseleave="hoverVoto[prod.nome]=0">
@@ -206,7 +203,6 @@ async function lasciaRecensione(nomeProdotto, voto) {
 		</div>
 	</div>
 </template>
-
 
 <style lang="scss" scoped>
 @use '../styles/categoria.scss' as *;

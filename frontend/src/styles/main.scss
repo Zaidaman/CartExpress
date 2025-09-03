@@ -1,5 +1,4 @@
 @use 'sass:color';
-// styles.scss
 
 $background-color: #C46000;
 $button-bg: #eee;
@@ -54,6 +53,7 @@ h1, h2 {
 	margin-bottom: 1.5rem;
 	transition: box-shadow 0.2s;
 }
+
 .card:hover {
 	box-shadow: 0 4px 16px rgba(196,96,0,0.12);
 }
@@ -94,4 +94,12 @@ ul {
 
 .view-container button:hover {
   background-color: #a34d00;
+}
+
+nav {
+  background: #f2f2f2;
+  padding: 10px;
+}
+router-link {
+  margin-right: 10px;
 }

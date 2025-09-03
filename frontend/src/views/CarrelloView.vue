@@ -5,10 +5,14 @@ const carrello = ref([]);
 const totale = ref(0);
 const totaleProdotti = ref(0);
 const email = ref("");
-const dataRitiro = ref(""); // ✅ nuovo campo per la data
+const dataRitiro = ref("");
 
 function calcolaTotaleProdotti() {
     totaleProdotti.value = carrello.value.reduce((acc, prod) => acc + prod.quantita, 0);
+}
+
+function calcolaTotale() {
+    totale.value = carrello.value.reduce((acc, prod) => acc + (prod.prezzo * prod.quantita), 0);
 }
 
 function leggiCarrelloDaCookie() {
@@ -29,10 +33,6 @@ function leggiCarrelloDaCookie() {
     }
     calcolaTotale();
     calcolaTotaleProdotti();
-}
-
-function calcolaTotale() {
-    totale.value = carrello.value.reduce((acc, prod) => acc + (prod.prezzo * prod.quantita), 0);
 }
 
 onMounted(() => {
@@ -63,7 +63,7 @@ async function processaTransazione() {
                 email: email.value,
                 prezzoTot: totale.value,
                 prodotti: carrello.value,
-                dataRitiro: dataRitiro.value // ✅ invio data al backend
+                dataRitiro: dataRitiro.value
             })
         });
 
@@ -77,7 +77,7 @@ async function processaTransazione() {
             totale.value = 0;
             totaleProdotti.value = 0;
             email.value = '';
-            dataRitiro.value = ''; // ✅ reset campo data
+            dataRitiro.value = '';
         } else {
             alert(`Errore: ${data.error || 'Ordine non salvato.'}`);
         }
@@ -94,6 +94,34 @@ function svuotaCarrello() {
     totaleProdotti.value = 0;
     email.value = '';
     dataRitiro.value = '';
+}
+
+function aggiornaCookieCarrello() {
+    document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello.value))}; path=/; max-age=604800`; // 7 giorni
+}
+
+function incrementaQuantita(item) {
+    const prodotto = carrello.value.find(p => p.nome === item.nome);
+    if (prodotto) {
+        prodotto.quantita += 1;
+        calcolaTotale();
+        calcolaTotaleProdotti();
+        aggiornaCookieCarrello();
+    }
+}
+
+function decrementaQuantita(item) {
+    const prodotto = carrello.value.find(p => p.nome === item.nome);
+    if (prodotto) {
+        if (prodotto.quantita > 1) {
+            prodotto.quantita -= 1;
+        } else {
+            carrello.value = carrello.value.filter(p => p.nome !== item.nome);
+        }
+        calcolaTotale();
+        calcolaTotaleProdotti();
+        aggiornaCookieCarrello();
+    }
 }
 </script>
 
@@ -113,7 +141,11 @@ function svuotaCarrello() {
                     <tbody>
                         <tr v-for="item in carrello" :key="item.nome">
                             <td>{{ item.nome }}</td>
-                            <td>{{ item.quantita }}</td>
+                            <td>
+                                <button @click="decrementaQuantita(item)" class="btn-qta">-</button>
+                                {{ item.quantita }}
+                                <button @click="incrementaQuantita(item)" class="btn-qta">+</button>
+                            </td>
                             <td>{{ (item.prezzo * item.quantita).toFixed(2) }} €</td>
                         </tr>
                     </tbody>
@@ -135,7 +167,6 @@ function svuotaCarrello() {
                 <input id="email" v-model="email" type="email" placeholder="Inserisci la tua email" />
             </div>
 
-            <!-- ✅ nuovo campo per data ritiro -->
             <div class="ritiro-input">
                 <label for="dataRitiro">Data e ora ritiro:</label>
                 <input id="dataRitiro" v-model="dataRitiro" type="datetime-local" />

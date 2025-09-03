@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const mysql = require('mysql2/promise'); // versione Promise
+const mysql = require('mysql2/promise');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
@@ -29,7 +29,6 @@ app.get('/api/prodotti/GetCategorie', async (req, res) => {
     }
 });
 
-// API: prodotti per categoria
 app.get('/api/prodotti/categoria/:idCategoria', async (req, res) => {
     const { idCategoria } = req.params;
     try {
@@ -49,62 +48,73 @@ app.post('/api/carrello/salvaOrdine', async (req, res) => {
     const { email, prezzoTot, prodotti, dataRitiro } = req.body;
 
     try {
+        // Controllo che l'input è rispettato
         if (!email || !prezzoTot || !prodotti || !dataRitiro) {
             return res.status(400).json({ success: false, error: 'Dati mancanti' });
         }
 
+        // Controllo che la data di ritiro sia valida
         const ritiroDate = new Date(dataRitiro);
         if (isNaN(ritiroDate.getTime())) {
             return res.status(400).json({ success: false, error: 'Data ritiro non valida' });
         }
 
+        // Selezione Day of the Week(DoW)
         const giorni = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
         const giornoSettimana = giorni[ritiroDate.getDay()];
 
+        // Normalizzazione Orario a HH:mm
         const oraRitiro = ritiroDate.toTimeString().slice(0, 5);
 
+        // Query per il recupero dell'orario del negozio al corrispondente DoW
         const [orari] = await pool.query(
             'SELECT OrarioApertura, OrarioChiusura FROM OrariNegozio WHERE Giorno = ?',
             [giornoSettimana]
         );
 
+        // Controllo del recupero dei dati da Query
         if (!orari.length) {
             return res.status(400).json({ success: false, error: 'Orari non trovati per questo giorno' });
         }
 
+        // Normalizzazione Dati Orario Negozio
         const { OrarioApertura, OrarioChiusura } = orari[0];
 
+        // Controllo se il negozio è chiuso
         if (!OrarioApertura || !OrarioChiusura) {
             return res.status(400).json({ success: false, error: 'Il negozio è chiuso in questo giorno' });
         }
 
-        // Estrai ora e minuti da oraRitiro
+        // Calcolo orario in minuti per orario ritiro
         const [ritiroH, ritiroM] = oraRitiro.split(':').map(Number);
         const minutiRitiro = ritiroH * 60 + ritiroM;
 
-        // Estrai ora e minuti da OrarioApertura
+        // Calcolo orario in minuti per orario apertura negozio
         const [aperturaH, aperturaM] = OrarioApertura.split(':').map(Number);
         const minutiApertura = aperturaH * 60 + aperturaM;
 
-        // Estrai ora e minuti da OrarioChiusura
+        // Calcolo orario in minuti per orario chiusura negozio
         const [chiusuraH, chiusuraM] = OrarioChiusura.split(':').map(Number);
         const minutiChiusura = chiusuraH * 60 + chiusuraM;
 
-        // Controllo intervallo
+        // Controllo che orario ritiro corrisponda all'orario di apertura del negozio
         if (minutiRitiro < minutiApertura || minutiRitiro > minutiChiusura) {
             return res.status(400).json({ success: false, error: 'Orario non disponibile per il ritiro' });
         }
 
+        // Calcolo IdOrdine
         const [resultQuery] = await pool.query(
             'SELECT MAX(IdOrdine) + 1 AS IdOrdine FROM ordini'
         );
         const idOrdine = resultQuery[0].IdOrdine || 1;
 
+        // Salvataggio Ordine
         await pool.query(
             'INSERT INTO ordini (email, PrezzoTotale, DataRitiro, DataCreazione, ListaProdotti) VALUES (?, ?, ?, NOW(), ?)',
             [email, prezzoTot, dataRitiro, JSON.stringify(prodotti)]
         );
 
+        // Creazione istanza Mail, raccolta dati accesso da file .env
         let transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 465,
@@ -115,6 +125,7 @@ app.post('/api/carrello/salvaOrdine', async (req, res) => {
             },
         });
 
+        // Creazione testo Mail
         let mailOptions = {
             from: `CartExpress <${process.env.SMTP_USER}>`,
             to: email,
@@ -127,6 +138,7 @@ app.post('/api/carrello/salvaOrdine', async (req, res) => {
             A presto su CartExpress!`,
         };
 
+        // Invio Mail
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
                 console.error('Errore invio email:', error);
@@ -136,13 +148,11 @@ app.post('/api/carrello/salvaOrdine', async (req, res) => {
         });
 
         res.json({ success: true, idOrdine: idOrdine });
-
     } catch (err) {
         console.error('Errore salvataggio ordine:', err.message);
         res.status(500).json({ success: false, error: err.message });
     }
 });
-
 
 app.get('/api/carrello/getOrdine/:idOrdine', async (req, res) => {
     const { idOrdine } = req.params;
@@ -159,7 +169,6 @@ app.get('/api/carrello/getOrdine/:idOrdine', async (req, res) => {
     }
 });
 
-// Ottieni recensioni di un prodotto
 app.get('/api/recensioni/:nomeProdotto', async (req, res) => {
     const { nomeProdotto } = req.params;
     try {
@@ -174,7 +183,7 @@ app.get('/api/recensioni/:nomeProdotto', async (req, res) => {
     }
 });
 
-// Ottieni media delle recensioni
+// Calcolo media voto delle recensioni di un prodotto
 app.get('/api/recensioni/media/:nomeProdotto', async (req, res) => {
     const { nomeProdotto } = req.params;
     try {
@@ -189,7 +198,6 @@ app.get('/api/recensioni/media/:nomeProdotto', async (req, res) => {
     }
 });
 
-// Aggiungi una nuova recensione
 app.post('/api/recensioni', async (req, res) => {
     const { nomeProdotto, voto, commento } = req.body;
     try {

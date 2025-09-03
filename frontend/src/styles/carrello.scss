@@ -1,4 +1,3 @@
-
 .carrello-container {
 	max-width: 600px;
 	margin: 2rem auto;
@@ -68,6 +67,7 @@
 	cursor: pointer;
 	transition: background 0.2s;
 }
+
 .checkout-btn:hover {
 	background: #27ae38;
 }
@@ -76,6 +76,7 @@
 	background: #e74c3c;
 	margin-top: 0.5rem;
 }
+
 .svuota-btn:hover {
 	background: #c0392b;
 }
@@ -88,24 +89,42 @@
   flex-wrap: wrap; // fallback per spazi stretti
 }
 
-/* Su desktop: carrello e checkout affiancati (già presente) */
-/* Su schermi stretti (max 900px): layout verticale con checkout sopra */
+.btn-qta {
+    background: #ddd;
+    border: none;
+    padding: 0.3rem 0.6rem;
+    margin: 0 0.3rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-qta:hover {
+    background: #bbb;
+}
+
 @media (max-width: 900px) {
-  .carrelli-flex {
-    flex-direction: column; /* Impila verticalmente */
-    align-items: center;
-  }
+	.carrelli-flex {
+		flex-direction: column;
+		align-items: center;
+	}
 
-  .checkout-container {
-    order: 1; /* Checkout sopra */
-    width: 100%;
-    max-width: 400px;
-    left: 0; /* Rimuove offset */
-  }
+	.checkout-container {
+		order: 1;
+		width: 100%;
+		max-width: 400px;
+		left: 0;
+	}
 
-  .carrello-container {
-    order: 2; /* Lista sotto */
-    width: 100%;
-    max-width: 600px;
-  }
+	.carrello-container {
+		order: 2;
+		width: 100%;
+		max-width: 600px;
+	}
+
+	.btn-qta {
+		padding: 0.5rem 1.25rem;
+    	font-size: 1.2rem; 
+  	}
 }
