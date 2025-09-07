@@ -27,15 +27,15 @@ https://www.figma.com/design/4IWtDBMHVADuoYBG0iqu3L/Untitled?node-id=0-1&p=f
 
 - inserimento mail per ricezione cartellino e notifica
 
-- visualizzazione numero cartellino e lista prodotti completa con costo 
+- visualizzazione numero cartellino e lista prodotti completa con costo
+
+- Visione e inserimento recensione per prodotto
 
 #### Server Side:
 
-- Salvataggio ordine pagato
+- Salvataggio ordine pagato su MySQL
 
 - Invio mail cartellino
-
-- Gestione archivio ordini
 
 - Gestione lista prodotti
 
