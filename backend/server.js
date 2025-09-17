@@ -221,6 +221,32 @@ app.listen(PORT, () => console.log(`Backend avviato su http://localhost:${PORT}`
 
 
 // Endpoint login utente
+
+// Endpoint registrazione utente
+app.post('/api/utenti/registrazione', async (req, res) => {
+    const { nome, email, password } = req.body;
+    if (!nome || !email || !password) {
+        return res.status(400).json({ success: false, error: 'Tutti i campi sono obbligatori' });
+    }
+    try {
+        // Controlla se l'email esiste già
+        const [esiste] = await pool.query('SELECT IdUtente FROM Utenti WHERE Email = ?', [email]);
+        if (esiste.length > 0) {
+            return res.status(409).json({ success: false, error: 'Email già registrata' });
+        }
+        // Inserisci nuovo utente
+        await pool.query(
+            'INSERT INTO Utenti (Nome, Email, Password, Ruolo) VALUES (?, ?, ?, ?)',
+            [nome, email, password, 'utente']
+        );
+        res.json({ success: true, message: 'Registrazione avvenuta con successo' });
+    } catch (err) {
+        console.error('Errore registrazione utente:', err);
+        res.status(500).json({ success: false, error: 'Errore server' });
+    }
+});
+
+// Endpoint login utente
 app.post('/api/login', async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
