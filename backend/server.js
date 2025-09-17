@@ -218,3 +218,26 @@ app.post('/api/recensioni', async (req, res) => {
 // Avvia server
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Backend avviato su http://localhost:${PORT}`));
+
+
+// Endpoint login utente
+app.post('/api/login', async (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ success: false, error: 'Email e password obbligatorie' });
+    }
+    try {
+        const [rows] = await pool.query(
+            'SELECT IdUtente, Nome, Email, Ruolo FROM Utenti WHERE Email = ? AND Password = ?',
+            [email, password]
+        );
+        if (rows.length === 1) {
+            res.json({ success: true, utente: rows[0] });
+        } else {
+            res.status(401).json({ success: false, error: 'Credenziali non valide' });
+        }
+    } catch (err) {
+        console.error('Errore login:', err);
+        res.status(500).json({ success: false, error: 'Errore server' });
+    }
+});

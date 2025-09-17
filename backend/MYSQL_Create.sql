@@ -1,15 +1,23 @@
 CREATE DATABASE CARTEXPRESS;
 USE CartExpress;
 
+CREATE TABLE IF NOT EXISTS Utenti (
+    Username VARCHAR(20) PRIMARY KEY,
+    Email VARCHAR(150) NOT NULL UNIQUE,
+    Password VARCHAR(255) NOT NULL,
+    Ruolo ENUM('admin', 'user') NOT NULL DEFAULT 'user'
+);
+
+
 -- Tabella Categorie
-CREATE TABLE Categoria (
+CREATE TABLE IF NOT EXISTS Categoria (
     IdCategoria INT AUTO_INCREMENT PRIMARY KEY,
     Nome VARCHAR(100) NOT NULL,
     Immagine VARCHAR(250) -- percorso immagine
 );
 
 -- Tabella Prodotti
-CREATE TABLE Prodotti (
+CREATE TABLE IF NOT EXISTS Prodotti (
     Nome VARCHAR(100) NOT NULL PRIMARY KEY,
     Prezzo DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     Immagine VARCHAR(250), -- percorso immagine
@@ -18,7 +26,7 @@ CREATE TABLE Prodotti (
 );
 
 -- Tabella Ordine
-CREATE TABLE Ordini (
+CREATE TABLE IF NOT EXISTS Ordini (
     IdOrdine INT AUTO_INCREMENT PRIMARY KEY,
     Email VARCHAR(150) NOT NULL,
     PrezzoTotale DECIMAL(10,2) NOT NULL DEFAULT 0.00,
@@ -28,7 +36,7 @@ CREATE TABLE Ordini (
 );
 
 -- Tabella Recensioni
-CREATE TABLE Recensioni (
+CREATE TABLE IF NOT EXISTS Recensioni (
     Id INT AUTO_INCREMENT PRIMARY KEY,
     NomeProdotto VARCHAR(255) NOT NULL,
     Voto INT CHECK (Voto BETWEEN 1 AND 5),
@@ -38,7 +46,7 @@ CREATE TABLE Recensioni (
 );
 
 -- Tabella Orari Negozio
-CREATE TABLE OrariNegozio (
+CREATE TABLE IF NOT EXISTS OrariNegozio (
     Giorno VARCHAR(50) NOT NULL PRIMARY KEY,
     OrarioApertura VARCHAR(50),
     OrarioChiusura VARCHAR(50)
@@ -46,6 +54,11 @@ CREATE TABLE OrariNegozio (
 
 USE CartExpress;
 
+-- Inserimento utenti
+INSERT INTO Utenti (Usernam , Email, Password, Ruolo) VALUES
+('admin', 'admin@example.com', 'adminpass', 'admin'),
+('user1', 'user1@example.com', 'user1pass', 'user'),
+('user2', 'user2@example.com', 'user2pass', 'user');
 -- Inserimento categorie
 INSERT INTO Categoria (Nome, Immagine) VALUES
 ('Frutta', 'img/cat/frutta.png'),
