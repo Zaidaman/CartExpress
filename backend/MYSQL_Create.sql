@@ -1,4 +1,4 @@
-CREATE DATABASE CARTEXPRESS;
+CREATE DATABASE IF NOT EXISTS CARTEXPRESS;
 USE CartExpress;
 
 CREATE TABLE IF NOT EXISTS Utenti (
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS OrariNegozio (
 USE CartExpress;
 
 -- Inserimento utenti
-INSERT INTO Utenti (Usernam , Email, Password, Ruolo) VALUES
+INSERT INTO Utenti (Username, Email, Password, Ruolo) VALUES
 ('admin', 'admin@example.com', 'adminpass', 'admin'),
 ('user1', 'user1@example.com', 'user1pass', 'user'),
 ('user2', 'user2@example.com', 'user2pass', 'user');

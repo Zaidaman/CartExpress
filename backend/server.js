@@ -224,20 +224,25 @@ app.listen(PORT, () => console.log(`Backend avviato su http://localhost:${PORT}`
 
 // Endpoint registrazione utente
 app.post('/api/utenti/registrazione', async (req, res) => {
-    const { nome, email, password } = req.body;
-    if (!nome || !email || !password) {
+    const { username, email, password } = req.body;
+    if (!username || !email || !password) {
         return res.status(400).json({ success: false, error: 'Tutti i campi sono obbligatori' });
     }
     try {
         // Controlla se l'email esiste già
-        const [esiste] = await pool.query('SELECT IdUtente FROM Utenti WHERE Email = ?', [email]);
+        const [esiste] = await pool.query('SELECT Username FROM Utenti WHERE Email = ?', [email]);
         if (esiste.length > 0) {
             return res.status(409).json({ success: false, error: 'Email già registrata' });
         }
+        // Controlla se lo username esiste già
+        const [esisteUser] = await pool.query('SELECT Username FROM Utenti WHERE Username = ?', [username]);
+        if (esisteUser.length > 0) {
+            return res.status(409).json({ success: false, error: 'Username già registrato' });
+        }
         // Inserisci nuovo utente
         await pool.query(
-            'INSERT INTO Utenti (Nome, Email, Password, Ruolo) VALUES (?, ?, ?, ?)',
-            [nome, email, password, 'utente']
+            'INSERT INTO Utenti (Username, Email, Password, Ruolo) VALUES (?, ?, ?, ?)',
+            [username, email, password, 'user']
         );
         res.json({ success: true, message: 'Registrazione avvenuta con successo' });
     } catch (err) {
@@ -254,7 +259,7 @@ app.post('/api/login', async (req, res) => {
     }
     try {
         const [rows] = await pool.query(
-            'SELECT IdUtente, Nome, Email, Ruolo FROM Utenti WHERE Email = ? AND Password = ?',
+            'SELECT Username, Email, Ruolo FROM Utenti WHERE Email = ? AND Password = ?',
             [email, password]
         );
         if (rows.length === 1) {

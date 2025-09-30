@@ -60,7 +60,7 @@ async function registraUtente() {
   }
 }
 
-async function login() {
+const login = async () => {
   errore.value = '';
   if (!email.value || !password.value) {
     errore.value = 'Inserisci email e password.';
@@ -77,7 +77,7 @@ async function login() {
     if (data.success) {
       // Salva info utente in localStorage/sessionStorage se necessario
       localStorage.setItem('utente', JSON.stringify(data.utente));
-      router.push('/');
+      router.push('/home');
     } else {
       errore.value = data.error || 'Credenziali non valide.';
     }
@@ -86,7 +86,7 @@ async function login() {
   } finally {
     loading.value = false;
   }
-}
+};
 </script>
 
 <template>
