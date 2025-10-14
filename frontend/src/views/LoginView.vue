@@ -42,7 +42,7 @@ async function registraUtente() {
     const res = await fetch('http://localhost:3000/api/utenti/registrazione', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ nome: regNome.value, email: regEmail.value, password: regPassword.value })
+      body: JSON.stringify({ username: regNome.value, email: regEmail.value, password: regPassword.value })
     });
     const data = await res.json();
     if (data.success) {
