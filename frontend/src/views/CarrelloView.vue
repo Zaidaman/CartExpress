@@ -4,8 +4,8 @@ import { ref, onMounted } from 'vue';
 const carrello = ref([]);
 const totale = ref(0);
 const totaleProdotti = ref(0);
-const email = ref("");
 const dataRitiro = ref("");
+const utente = ref(null);
 
 function calcolaTotaleProdotti() {
     totaleProdotti.value = carrello.value.reduce((acc, prod) => acc + prod.quantita, 0);
@@ -37,11 +37,20 @@ function leggiCarrelloDaCookie() {
 
 onMounted(() => {
     leggiCarrelloDaCookie();
+    // Recupera utente da localStorage
+    const utenteSalvato = localStorage.getItem('utente');
+    if (utenteSalvato) {
+        try {
+            utente.value = JSON.parse(utenteSalvato);
+        } catch {
+            utente.value = null;
+        }
+    }
 });
 
 async function processaTransazione() {
-    if (!email.value || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) {
-        alert("Inserisci un'email valida.");
+    if (!utente.value || !utente.value.Email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(utente.value.Email)) {
+        alert("Utente non valido. Effettua il login.");
         return;
     }
 
@@ -60,7 +69,7 @@ async function processaTransazione() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                email: email.value,
+                email: utente.value.Email,
                 prezzoTot: totale.value,
                 prodotti: carrello.value,
                 dataRitiro: dataRitiro.value
@@ -69,14 +78,13 @@ async function processaTransazione() {
 
         const data = await res.json();
         if (data.success) {
-            alert(`Ordine salvato! Grazie ${email.value}. Il tuo ID ordine è: ${data.idOrdine}`);
+            alert(`Ordine salvato! Grazie ${utente.value.Email}. Il tuo ID ordine è: ${data.idOrdine}`);
 
             document.cookie = 'carrello=; path=/; max-age=0';
 
             carrello.value = [];
             totale.value = 0;
             totaleProdotti.value = 0;
-            email.value = '';
             dataRitiro.value = '';
         } else {
             alert(`Errore: ${data.error || 'Ordine non salvato.'}`);
@@ -87,14 +95,11 @@ async function processaTransazione() {
     }
 }
 
-function svuotaCarrello() {
     document.cookie = 'carrello=; path=/; max-age=0';
     carrello.value = [];
     totale.value = 0;
     totaleProdotti.value = 0;
-    email.value = '';
     dataRitiro.value = '';
-}
 
 function aggiornaCookieCarrello() {
     document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello.value))}; path=/; max-age=604800`; // 7 giorni
@@ -162,9 +167,9 @@ function decrementaQuantita(item) {
                 <span>Numero totale prodotti: <strong>{{ totaleProdotti }}</strong></span>
             </div>
 
-            <div class="email-input">
-                <label for="email">Email per la ricevuta:</label>
-                <input id="email" v-model="email" type="email" placeholder="Inserisci la tua email" />
+            <div class="email-info">
+                <label>Email per la ricevuta:</label>
+                <span><strong>{{ utente?.Email || 'Non loggato' }}</strong></span>
             </div>
 
             <div class="ritiro-input">
@@ -172,7 +177,7 @@ function decrementaQuantita(item) {
                 <input id="dataRitiro" v-model="dataRitiro" type="datetime-local" />
             </div>
 
-            <button class="checkout-btn" @click="processaTransazione" :disabled="!email || !dataRitiro || carrello.length === 0">
+            <button class="checkout-btn" @click="processaTransazione" :disabled="!utente?.Email || !dataRitiro || carrello.length === 0">
                 Processa transazione
             </button>
             <button class="checkout-btn svuota-btn" @click="svuotaCarrello">Svuota carrello</button>

@@ -19,6 +19,30 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
+
+// Endpoint: prodotti di una categoria casuale
+app.get('/api/prodotti/randomCategoria', async (req, res) => {
+    try {
+        // Prendi tutti gli ID delle categorie
+        const [categorie] = await pool.query('SELECT IdCategoria FROM Categoria');
+        if (!categorie.length) {
+            return res.status(404).json({ error: 'Nessuna categoria trovata' });
+        }
+        // Scegli una categoria casuale
+        const randomIndex = Math.floor(Math.random() * categorie.length);
+        const idCategoria = categorie[randomIndex].IdCategoria;
+        // Prendi tutti i prodotti di quella categoria
+        const [prodotti] = await pool.query(
+            'SELECT Nome AS nome, Immagine AS immagine FROM Prodotti WHERE IdCategoria = ?',
+            [idCategoria]
+        );
+        res.json({ idCategoria, prodotti });
+    } catch (err) {
+        console.error('Errore randomCategoria:', err);
+        res.status(500).json({ error: 'Errore nel recupero prodotti casuali' });
+    }
+});
+
 app.get('/api/prodotti/GetCategorie', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM Categoria');

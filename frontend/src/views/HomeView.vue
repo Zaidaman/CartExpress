@@ -7,12 +7,14 @@ const prodotti = ref([]);
 const loading = ref(true);
 const errore = ref(null);
 
+
 onMounted(async () => {
   try {
-    // Modifica l'URL in base al tuo backend
-    const res = await fetch('http://localhost:3000/api/prodotti?limit=4');
+    // Chiamata all'endpoint che restituisce prodotti di una categoria casuale
+    const res = await fetch('http://localhost:3000/api/prodotti/randomCategoria');
     if (!res.ok) throw new Error('Errore nel recupero prodotti');
-    prodotti.value = await res.json();
+    const data = await res.json();
+    prodotti.value = data.prodotti;
   } catch (e) {
     errore.value = e.message;
   } finally {
@@ -36,10 +38,9 @@ function vaiAllaCategoria() {
       <div v-if="loading">Caricamento...</div>
       <div v-else-if="errore">{{ errore }}</div>
       <div v-else class="prodotti-grid">
-        <div v-for="prodotto in prodotti" :key="prodotto.id" class="prodotto-card">
+        <div v-for="prodotto in prodotti" :key="prodotto.nome" class="prodotto-card">
           <img :src="prodotto.immagine" alt="Immagine prodotto" class="prodotto-img" />
           <div class="prodotto-nome">{{ prodotto.nome }}</div>
-          <div class="prodotto-prezzo">{{ prodotto.prezzo }} €</div>
         </div>
       </div>
     </div>
