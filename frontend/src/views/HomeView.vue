@@ -49,8 +49,9 @@ function vaiAllaCategoria() {
     <h2>La tua spesa inizia da qui!</h2>
 
     <button @click="vaiAllaCategoria">Vai alle Categorie</button>
+  </div>
 
-    <div class="showcase">
+  <div class="showcase">
       <h3>Prodotti in vetrina</h3>
       <div v-if="loading">Caricamento...</div>
       <div v-else-if="errore">{{ errore }}</div>
@@ -60,13 +61,18 @@ function vaiAllaCategoria() {
           <div class="prodotto-nome">{{ prodotto.nome }}</div>
         </div>
       </div>
-    </div> <!-- chiusura showcase -->
-  </div> <!-- chiusura view-container -->
+    </div>
 </template>
 
 <style scoped>
 .showcase {
-  margin-top: 2rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem 1.5rem;
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  text-align: center;
 }
 .prodotti-grid {
   display: flex;
