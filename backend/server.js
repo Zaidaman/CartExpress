@@ -43,9 +43,23 @@ app.get('/api/prodotti/randomCategoria', async (req, res) => {
     }
 });
 
+
 app.get('/api/prodotti/GetCategorie', async (req, res) => {
     try {
         const [rows] = await pool.query('SELECT * FROM Categoria');
+        res.json(rows);
+    } catch (err) {
+        console.error('Errore query MySQL:', err);
+        res.status(500).json({ error: 'Errore nel recupero dati' });
+    }
+});
+
+// Endpoint: tutti i prodotti senza filtro categoria
+app.get('/api/prodotti/tutti', async (req, res) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT Nome AS nome, Prezzo AS prezzo, Immagine AS immagine FROM Prodotti'
+        );
         res.json(rows);
     } catch (err) {
         console.error('Errore query MySQL:', err);

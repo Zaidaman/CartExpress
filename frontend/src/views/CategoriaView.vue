@@ -7,12 +7,24 @@ const quantitaProdotti = reactive({});
 const categoriaSelezionata = ref(null);
 
 // Carica tutte le categorie all'avvio
+
 onMounted(async () => {
 	try {
-		const res = await fetch('http://localhost:3000/api/prodotti/GetCategorie');
-		categorie.value = await res.json();
+		// Carica categorie
+		const resCat = await fetch('http://localhost:3000/api/prodotti/GetCategorie');
+		categorie.value = await resCat.json();
+
+		// Carica tutti i prodotti all'avvio
+		const resProd = await fetch('http://localhost:3000/api/prodotti/tutti');
+		prodotti.value = await resProd.json();
+		for (const key in quantitaProdotti) delete quantitaProdotti[key];
+		prodotti.value.forEach(prod => {
+			quantitaProdotti[prod.nome] = 1;
+			caricaRecensioni(prod.nome);
+		});
+		categoriaSelezionata.value = null; // Nessuna categoria selezionata
 	} catch (err) {
-		console.error('Errore nel fetch categorie:', err);
+		console.error('Errore nel fetch iniziale:', err);
 	}
 });
 
@@ -154,53 +166,50 @@ async function lasciaRecensione(nomeProdotto, voto) {
 			</ul>
 			<p v-else>Caricamento categorie...</p>
 		</div>
-		<div class="prodotti-container">
-			<div v-if="!categoriaSelezionata" class="placeholder">
-				<p>Seleziona una categoria per vedere i prodotti</p>
-			</div>
-			<div v-else>
-				<h2>Prodotti</h2>
-				<ul v-if="prodotti.length">
-					<li v-for="prod in prodotti" :key="prod.nome" class="prodotto-item">
-					<img :src="`/${prod.immagine}`" alt="" />
-					<div class="info-prodotto">
-						<span class="nome-prodotto">{{ prod.nome }}</span>
-						<span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>
-						
-						<input type="number" min="1" v-model="quantitaProdotti[prod.nome]" @input="aggiornaQuantita(prod.nome, quantitaProdotti[prod.nome])" class="input-quantita" />
-						<button @click="salvaInCookie(prod)" class="btn-salva">Salva</button>
-
-						<div class="recensioni-container">
-							<div class="media-voto">Valutazione: {{ mediaRecensioni[prod.nome] || 'N/A' }} ⭐</div>
-							<div class="stelle" @mouseleave="hoverVoto[prod.nome]=0">
-								<span v-for="i in 5" :key="i" 
-									:class="{ active: i <= (hoverVoto[prod.nome] || votoSelezionato[prod.nome] || 0) }"
-									@mouseover="hoverVoto[prod.nome]=i"
-									@click="lasciaRecensione(prod.nome, i)">
-									★
-								</span>
-							</div>
-							<button @click="prodottoAperto = (prodottoAperto === prod.nome ? null : prod.nome)">
-								{{ prodottoAperto === prod.nome ? 'Nascondi recensioni' : 'Mostra recensioni' }}
-							</button>
-							<div v-if="prodottoAperto === prod.nome" class="recensioni-overlay">
-								<div class="recensioni-panel">
-									<button class="close-btn" @click="prodottoAperto = null">×</button>
-									<h3>Recensioni per {{ prod.nome }}</h3>
-									<ul class="lista-recensioni">
-										<li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
-											<strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</li>
-				</ul>
-				<p v-else>Nessun prodotto trovato per questa categoria.</p>
-			</div>
-		</div>
+		   <div class="prodotti-container">
+			   <div v-if="prodotti.length === 0">
+				   <p>Nessun prodotto trovato.</p>
+			   </div>
+			   <div v-else>
+				   <h2>Prodotti</h2>
+				   <ul>
+					   <li v-for="prod in prodotti" :key="prod.nome" class="prodotto-item">
+						   <img :src="`/${prod.immagine}`" alt="" />
+						   <div class="info-prodotto">
+							   <span class="nome-prodotto">{{ prod.nome }}</span>
+							   <span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>
+							   <input type="number" min="1" v-model="quantitaProdotti[prod.nome]" @input="aggiornaQuantita(prod.nome, quantitaProdotti[prod.nome])" class="input-quantita" />
+							   <button @click="salvaInCookie(prod)" class="btn-salva">Salva</button>
+							   <div class="recensioni-container">
+								   <div class="media-voto">Valutazione: {{ mediaRecensioni[prod.nome] || 'N/A' }} ⭐</div>
+								   <div class="stelle" @mouseleave="hoverVoto[prod.nome]=0">
+									   <span v-for="i in 5" :key="i" 
+										   :class="{ active: i <= (hoverVoto[prod.nome] || votoSelezionato[prod.nome] || 0) }"
+										   @mouseover="hoverVoto[prod.nome]=i"
+										   @click="lasciaRecensione(prod.nome, i)">
+										   ★
+									   </span>
+								   </div>
+								   <button @click="prodottoAperto = (prodottoAperto === prod.nome ? null : prod.nome)">
+									   {{ prodottoAperto === prod.nome ? 'Nascondi recensioni' : 'Mostra recensioni' }}
+								   </button>
+								   <div v-if="prodottoAperto === prod.nome" class="recensioni-overlay">
+									   <div class="recensioni-panel">
+										   <button class="close-btn" @click="prodottoAperto = null">×</button>
+										   <h3>Recensioni per {{ prod.nome }}</h3>
+										   <ul class="lista-recensioni">
+											   <li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
+												   <strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
+											   </li>
+										   </ul>
+									   </div>
+								   </div>
+							   </div>
+						   </div>
+					   </li>
+				   </ul>
+			   </div>
+		   </div>
 	</div>
 </template>
 
