@@ -64,67 +64,6 @@ function vaiAllaCategoria() {
     </div>
 </template>
 
-<style scoped>
-.showcase {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2rem 1.5rem;
-  background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-  text-align: center;
-}
-.prodotti-grid {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-.prodotto-card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 1rem;
-  width: 160px;
-  text-align: center;
-}
-.prodotto-img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  margin-bottom: 0.5rem;
-}
-.prodotto-nome {
-  font-weight: bold;
-  margin-bottom: 0.25rem;
-}
-.prodotto-prezzo {
-  color: #2e7d32;
-  font-size: 1.1em;
-}
-.prodotti-scroll {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto; /* abilita lo scroll orizzontale */
-  padding-bottom: 1rem;
-  scroll-behavior: smooth; /* scorrimento fluido */
-}
-
-.prodotti-scroll::-webkit-scrollbar {
-  height: 8px;
-}
-
-.prodotti-scroll::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3);
-  border-radius: 4px;
-}
-
-.prodotto-card {
-  flex: 0 0 auto; /* evita che si ridimensionino */
-  width: 160px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  padding: 1rem;
-  text-align: center;
-}
+<style lang="scss" scoped>
+@use '../styles/home.scss' as *;
 </style>
