@@ -95,11 +95,6 @@ async function processaTransazione() {
     }
 }
 
-    document.cookie = 'carrello=; path=/; max-age=0';
-    carrello.value = [];
-    totale.value = 0;
-    totaleProdotti.value = 0;
-    dataRitiro.value = '';
 
 function aggiornaCookieCarrello() {
     document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello.value))}; path=/; max-age=604800`; // 7 giorni
@@ -128,6 +123,14 @@ function decrementaQuantita(item) {
         aggiornaCookieCarrello();
     }
 }
+    // Svuota completamente il carrello e cancella il cookie
+    function svuotaCarrello() {
+        carrello.value = [];
+        totale.value = 0;
+        totaleProdotti.value = 0;
+        dataRitiro.value = '';
+        document.cookie = 'carrello=; path=/; max-age=0';
+    }
 </script>
 
 <template>
