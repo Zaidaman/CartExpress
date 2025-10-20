@@ -53,3 +53,48 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.05);
   text-align: center;
 }
+.register-btn {
+  margin-top: 1rem;
+  background: #eee;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.register-modal {
+  background: #fff;
+  padding: 2rem 1.5rem;
+  border-radius: 8px;
+  min-width: 300px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+.register-modal input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.register-modal button {
+  margin-right: 0.5rem;
+}
+.errore {
+  color: #c00;
+  margin-top: 0.5rem;
+}
+.success {
+  color: #080;
+  margin-top: 0.5rem;
+}
