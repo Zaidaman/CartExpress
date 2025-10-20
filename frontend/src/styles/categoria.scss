@@ -105,6 +105,69 @@ body {
     flex-shrink: 0;
 }
 
+.dropdown-categorie-wrapper {
+	position: absolute;
+	top: 70px;
+	left: 24px;
+	z-index: 100;
+}
+
+.btn-dropdown-categorie {
+	background: #fff;
+	color: #c46000;
+	border: 2px solid #c46000;
+	border-radius: 8px;
+	padding: 8px 18px;
+	font-size: 1.1em;
+	cursor: pointer;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+	transition: box-shadow 0.2s;
+}
+.btn-dropdown-categorie:hover {
+	box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.dropdown-categorie-menu {
+	position: absolute;
+	top: 44px;
+	left: 0;
+	background: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+	min-width: 220px;
+	padding: 8px 0;
+	z-index: 101;
+}
+.dropdown-categorie-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.dropdown-categorie-menu li {
+	margin: 0;
+	padding: 0;
+}
+.dropdown-categorie-menu button {
+	width: 100%;
+	background: none;
+	border: none;
+	text-align: left;
+	padding: 10px 18px;
+	font-size: 1em;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	transition: background 0.2s;
+}
+.dropdown-categorie-menu button:hover {
+	background: #f7f7f7;
+}
+
 .recensioni-container {
     width: 100%;
     min-width: 0;
@@ -113,61 +176,6 @@ body {
     flex: 1 1 auto;
 }
 
-.categorie-container ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    justify-content: center;
-}
-
-.categorie-container li {
-    flex: 0 1 120px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-.categorie-container li button {
-    width: 120px;
-    height: 90px;
-    min-width: 120px;
-    min-height: 90px;
-    max-width: 120px;
-    max-height: 90px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    cursor: pointer;
-    box-sizing: border-box;
-    transition: box-shadow 0.2s;
-    overflow: hidden;
-}
-
-.categorie-container li button:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
-}
-
-.categorie-container li button img {
-    max-width: 40px;
-    max-height: 40px;
-    margin-bottom: 0.3em;
-}
-
-.categorie-container li button span {
-    font-size: 1em;
-    text-align: center;
-    word-break: break-word;
-}
 
 img {
 	max-width: 40px;

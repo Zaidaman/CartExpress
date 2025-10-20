@@ -1,6 +1,8 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
 
+const showDropdown = ref(false);
+
 const categorie = ref([]);
 const prodotti = ref([]);
 const quantitaProdotti = reactive({});
@@ -32,18 +34,19 @@ onMounted(async () => {
 async function caricaProdotti(idCategoria) {
 	categoriaSelezionata.value = idCategoria;
 	try {
-		const res = await fetch(`http://localhost:3000/api/prodotti/categoria/${idCategoria}`);
+		let res;
+		if (idCategoria === null) {
+			res = await fetch('http://localhost:3000/api/prodotti/tutti');
+		} else {
+			res = await fetch(`http://localhost:3000/api/prodotti/categoria/${idCategoria}`);
+		}
 		prodotti.value = await res.json();
 		// Reset quantità per i nuovi prodotti e imposta default a 1
-		console.log('Prodotti ricevuti:', prodotti.value);
-		// Reset quantità per i nuovi prodotti
-		for (const key in quantitaProdotti) delete quantitaProdotti[key]; // svuota l'oggetto
-			prodotti.value.forEach(prod => {
-			quantitaProdotti[prod.nome] = 1;
-		});
+		for (const key in quantitaProdotti) delete quantitaProdotti[key];
 		prodotti.value.forEach(prod => {
-    caricaRecensioni(prod.nome);
-});
+			quantitaProdotti[prod.nome] = 1;
+			caricaRecensioni(prod.nome);
+		});
 	} catch (err) {
 		console.error('Errore nel fetch prodotti:', err);
 		prodotti.value = [];
@@ -154,62 +157,68 @@ async function lasciaRecensione(nomeProdotto, voto) {
 <template>
 	<div id="notifica-container" style="position: fixed;top: 20px;right: 20px;z-index: 9999;"></div>
 	<div class="categorie-prodotti-wrapper">
-		<div class="categorie-container">
-			<h2>Categorie</h2>
-			<ul v-if="categorie.length">
-				<li v-for="cat in categorie" :key="cat.IdCategoria">
-					<button @click="caricaProdotti(cat.IdCategoria)">
-						<img :src="`/${cat.Immagine}`" alt="" />
-						<span>{{ cat.Nome }}</span>
-					</button>
-				</li>
-			</ul>
-			<p v-else>Caricamento categorie...</p>
+		<div class="dropdown-categorie-wrapper">
+			<button class="btn-dropdown-categorie" @click="showDropdown = !showDropdown">
+				Seleziona categoria ▼
+			</button>
+			<div v-if="showDropdown" class="dropdown-categorie-menu">
+				<ul>
+					<li>
+						<button @click="caricaProdotti(null); showDropdown = false">Tutte le categorie</button>
+					</li>
+					<li v-for="cat in categorie" :key="cat.IdCategoria">
+						<button @click="caricaProdotti(cat.IdCategoria); showDropdown = false">
+							<img :src="`/${cat.Immagine}`" alt="" style="max-width:24px;max-height:24px;margin-right:8px;" />
+							<span>{{ cat.Nome }}</span>
+						</button>
+					</li>
+				</ul>
+			</div>
 		</div>
-		   <div class="prodotti-container">
-			   <div v-if="prodotti.length === 0">
-				   <p>Nessun prodotto trovato.</p>
-			   </div>
-			   <div v-else>
-				   <h2>Prodotti</h2>
-				   <ul>
-					   <li v-for="prod in prodotti" :key="prod.nome" class="prodotto-item">
-						   <img :src="`/${prod.immagine}`" alt="" />
-						   <div class="info-prodotto">
-							   <span class="nome-prodotto">{{ prod.nome }}</span>
-							   <span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>
-							   <input type="number" min="1" v-model="quantitaProdotti[prod.nome]" @input="aggiornaQuantita(prod.nome, quantitaProdotti[prod.nome])" class="input-quantita" />
-							   <button @click="salvaInCookie(prod)" class="btn-salva">Salva</button>
-							   <div class="recensioni-container">
-								   <div class="media-voto">Valutazione: {{ mediaRecensioni[prod.nome] || 'N/A' }} ⭐</div>
-								   <div class="stelle" @mouseleave="hoverVoto[prod.nome]=0">
-									   <span v-for="i in 5" :key="i" 
-										   :class="{ active: i <= (hoverVoto[prod.nome] || votoSelezionato[prod.nome] || 0) }"
-										   @mouseover="hoverVoto[prod.nome]=i"
-										   @click="lasciaRecensione(prod.nome, i)">
-										   ★
-									   </span>
-								   </div>
-								   <button @click="prodottoAperto = (prodottoAperto === prod.nome ? null : prod.nome)">
-									   {{ prodottoAperto === prod.nome ? 'Nascondi recensioni' : 'Mostra recensioni' }}
-								   </button>
-								   <div v-if="prodottoAperto === prod.nome" class="recensioni-overlay">
-									   <div class="recensioni-panel">
-										   <button class="close-btn" @click="prodottoAperto = null">×</button>
-										   <h3>Recensioni per {{ prod.nome }}</h3>
-										   <ul class="lista-recensioni">
-											   <li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
-												   <strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
-											   </li>
-										   </ul>
-									   </div>
-								   </div>
-							   </div>
-						   </div>
-					   </li>
-				   </ul>
-			   </div>
-		   </div>
+		<div class="prodotti-container">
+			<div v-if="prodotti.length === 0">
+				<p>Nessun prodotto trovato.</p>
+			</div>
+			<div v-else>
+				<h2>Prodotti</h2>
+				<ul>
+					<li v-for="prod in prodotti" :key="prod.nome" class="prodotto-item">
+						<img :src="`/${prod.immagine}`" alt="" />
+						<div class="info-prodotto">
+							<span class="nome-prodotto">{{ prod.nome }}</span>
+							<span class="prezzo-prodotto">Prezzo: {{ prod.prezzo }} €</span>
+							<input type="number" min="1" v-model="quantitaProdotti[prod.nome]" @input="aggiornaQuantita(prod.nome, quantitaProdotti[prod.nome])" class="input-quantita" />
+							<button @click="salvaInCookie(prod)" class="btn-salva">Salva</button>
+							<div class="recensioni-container">
+								<div class="media-voto">Valutazione: {{ mediaRecensioni[prod.nome] || 'N/A' }} ⭐</div>
+								<div class="stelle" @mouseleave="hoverVoto[prod.nome]=0">
+									<span v-for="i in 5" :key="i" 
+										:class="{ active: i <= (hoverVoto[prod.nome] || votoSelezionato[prod.nome] || 0) }"
+										@mouseover="hoverVoto[prod.nome]=i"
+										@click="lasciaRecensione(prod.nome, i)">
+										★
+									</span>
+								</div>
+								<button @click="prodottoAperto = (prodottoAperto === prod.nome ? null : prod.nome)">
+									{{ prodottoAperto === prod.nome ? 'Nascondi recensioni' : 'Mostra recensioni' }}
+								</button>
+								<div v-if="prodottoAperto === prod.nome" class="recensioni-overlay">
+									<div class="recensioni-panel">
+										<button class="close-btn" @click="prodottoAperto = null">×</button>
+										<h3>Recensioni per {{ prod.nome }}</h3>
+										<ul class="lista-recensioni">
+											<li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
+												<strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</div>
 	</div>
 </template>
 
