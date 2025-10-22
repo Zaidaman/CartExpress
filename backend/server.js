@@ -228,14 +228,22 @@ app.get('/api/recensioni/media/:nomeProdotto', async (req, res) => {
 });
 
 app.post('/api/recensioni', async (req, res) => {
-    const { nomeProdotto, voto, commento } = req.body;
+    const { nomeProdotto, voto, commento, idUtente } = req.body;
     try {
-        if (!nomeProdotto || !voto) {
+        if (!nomeProdotto || !voto || !idUtente) {
             return res.status(400).json({ error: 'Dati mancanti' });
         }
+        // Verifica se l'utente ha già recensito questo prodotto
+        const [esiste] = await pool.query(
+            'SELECT Id FROM Recensioni WHERE NomeProdotto = ? AND IdUtente = ?',
+            [nomeProdotto, idUtente]
+        );
+        if (esiste.length > 0) {
+            return res.status(409).json({ error: 'Hai già recensito questo prodotto.' });
+        }
         await pool.query(
-            'INSERT INTO Recensioni (NomeProdotto, Voto, Commento) VALUES (?, ?, ?)',
-            [nomeProdotto, voto, commento || null]
+            'INSERT INTO Recensioni (NomeProdotto, Voto, Commento, IdUtente) VALUES (?, ?, ?, ?)',
+            [nomeProdotto, voto, commento || null, idUtente]
         );
         res.json({ success: true, message: 'Recensione aggiunta con successo' });
     } catch (err) {

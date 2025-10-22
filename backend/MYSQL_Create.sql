@@ -2,7 +2,8 @@ CREATE DATABASE IF NOT EXISTS CARTEXPRESS;
 USE CartExpress;
 
 CREATE TABLE IF NOT EXISTS Utenti (
-    Username VARCHAR(20) PRIMARY KEY,
+    IdUtente INT AUTO_INCREMENT PRIMARY KEY,
+    Username VARCHAR(20) NOT NULL UNIQUE,
     Email VARCHAR(150) NOT NULL UNIQUE,
     Password VARCHAR(255) NOT NULL,
     Ruolo ENUM('admin', 'user') NOT NULL DEFAULT 'user'
@@ -41,8 +42,10 @@ CREATE TABLE IF NOT EXISTS Recensioni (
     NomeProdotto VARCHAR(255) NOT NULL,
     Voto INT CHECK (Voto BETWEEN 1 AND 5),
     Commento TEXT,
+    IdUtente INT NOT NULL,
     DataCreazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (NomeProdotto) REFERENCES Prodotti(Nome)
+    FOREIGN KEY (NomeProdotto) REFERENCES Prodotti(Nome),
+    FOREIGN KEY (IdUtente) REFERENCES Utenti(IdUtente)
 );
 
 -- Tabella Orari Negozio
@@ -57,8 +60,8 @@ USE CartExpress;
 -- Inserimento utenti
 INSERT INTO Utenti (Username, Email, Password, Ruolo) VALUES
 ('admin', 'admin@example.com', 'adminpass', 'admin'),
-('user1', 'user1@example.com', 'user1pass', 'user'),
-('user2', 'user2@example.com', 'user2pass', 'user');
+('luca', 'lucavigno2003@gmail.com', 'luca1', 'user'),
+('filippo', 'user2@example.com', 'user2pass', 'user');
 -- Inserimento categorie
 INSERT INTO Categoria (Nome, Immagine) VALUES
 ('Frutta', 'img/cat/frutta.png'),
@@ -100,30 +103,35 @@ INSERT INTO Ordini (Email, PrezzoTotale, DataRitiro, DataCreazione, ListaProdott
 VALUES ('pippo@gmail.com', 2.00, '2025-08-17 16:00:00', '2025-08-16 14:30:00', '[{"nome":"Olio di oliva","prezzo":5,"quantita":1},{"nome":"Banana","prezzo":0.7,"quantita":3},{"nome":"Latte","prezzo":1.3,"quantita":2}]');
 
 -- Inserimento Recensioni Test
-INSERT INTO Recensioni (NomeProdotto, Voto, Commento) VALUES
+INSERT INTO Recensioni (NomeProdotto, Voto, Commento, IdUtente) VALUES
 -- Mela
-('Mela', 5, 'Ottima qualità, molto dolce e fresca'),
-('Mela', 4, 'Buona ma un po’ piccola'),
-('Mela', 3, NULL),
+('Mela', 5, 'Ottima qualità, molto dolce e fresca',1),
+('Mela', 4, 'Buona ma un po’ piccola',2),
+('Mela', 3, NULL,3),
 -- Banana
-('Banana', 5, 'Banane perfette per smoothie'),
-('Banana', 4, NULL),
-('Banana', 2, 'Un po’ troppo mature per i miei gusti'),
+('Banana', 5, 'Banane perfette per smoothie',1),
+('Banana', 4, NULL,2),
+('Banana', 2, 'Un po’ troppo mature per i miei gusti',3),
 -- Farfalle
-('Farfalle', 4, 'Pasta di buona qualità, tiene bene la cottura'),
-('Farfalle', 3, NULL),
+('Farfalle', 4, 'Pasta di buona qualità, tiene bene la cottura',1),
+('Farfalle', 3, NULL,2),
+('Farfalle', 5, 'Le mie preferite per insalate di pasta!',3),
 -- Latte
-('Latte', 5, 'Fresco e con un buon sapore'),
-('Latte', 2, 'Non mi è piaciuto il sapore'),
+('Latte', 5, 'Fresco e con un buon sapore',1),
+('Latte', 2, 'Non mi è piaciuto il sapore',2),
+('Latte', 4, NULL,3),
 -- Uova
-('Uova', 4, 'Ottime per fare dolci'),
-('Uova', 3, NULL),
+('Uova', 4, 'Ottime per fare dolci',1),
+('Uova', 3, NULL,2),
+('Uova', 5, 'Le migliori uova che abbia mai comprato!',3),
 -- Biscotti
-('Biscotti', 5, 'Deliziosi! Perfetti con il tè'),
-('Biscotti', 4, NULL),
+('Biscotti', 5, 'Deliziosi! Perfetti con il tè',1),
+('Biscotti', 4, NULL,2),
+('Biscotti', 3, 'Un po’ troppo dolci per i miei gusti',3),
 -- Pomodori
-('Pomodori', 4, 'Pomodori freschi e saporiti'),
-('Pomodori', 2, NULL);
+('Pomodori', 4, 'Pomodori freschi e saporiti',1),
+('Pomodori', 2, NULL,2),
+('Pomodori', 5, 'Ideali per insalate e salse!',3);
 
 -- Inserimento Orari Negozio Test, NULL = Negozio Chiuso
 INSERT INTO OrariNegozio ( Giorno , OrarioApertura , OrarioChiusura ) VALUES
