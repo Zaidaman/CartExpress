@@ -202,7 +202,11 @@ app.get('/api/recensioni/:nomeProdotto', async (req, res) => {
     const { nomeProdotto } = req.params;
     try {
         const [rows] = await pool.query(
-            'SELECT Voto, LEFT(Commento, 50) AS Commento, DataCreazione FROM Recensioni WHERE NomeProdotto = ? ORDER BY DataCreazione DESC',
+            `SELECT r.Voto, LEFT(r.Commento, 50) AS Commento, r.DataCreazione, u.Username
+             FROM Recensioni r
+             JOIN Utenti u ON r.IdUtente = u.IdUtente
+             WHERE r.NomeProdotto = ?
+             ORDER BY r.DataCreazione DESC`,
             [nomeProdotto]
         );
         res.json(rows);

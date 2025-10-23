@@ -138,19 +138,29 @@ async function caricaRecensioni(nomeProdotto) {
 
 // Lascia recensione
 async function lasciaRecensione(nomeProdotto, voto) {
-    votoSelezionato[nomeProdotto] = voto;
-    const commento = prompt('Inserisci un commento (opzionale, MAX 50 Caratteri):');
-    try {
-        await fetch('http://localhost:3000/api/recensioni', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nomeProdotto, voto, commento })
-        });
-        mostraNotifica('Recensione inviata con successo!');
-        caricaRecensioni(nomeProdotto);
-    } catch (err) {
-        console.error('Errore salvataggio recensione:', err);
-    }
+	votoSelezionato[nomeProdotto] = voto;
+	const commento = prompt('Inserisci un commento (opzionale, MAX 50 Caratteri):');
+	try {
+		const res = await fetch('http://localhost:3000/api/recensioni', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ nomeProdotto, voto, commento })
+		});
+		if (res.status === 409) {
+			mostraNotifica('Hai già recensito questo prodotto!');
+		} else if (res.ok) {
+			mostraNotifica('Recensione inviata con successo!');
+			caricaRecensioni(nomeProdotto);
+		} else {
+			mostraNotifica('Errore nell’invio della recensione.');
+		}
+	} catch (err) {
+		console.error('Errore salvataggio recensione:', err);
+		mostraNotifica('Errore di rete nel salvataggio della recensione.');
+	}
+	// Reset stelle dopo invio
+	votoSelezionato[nomeProdotto] = 0;
+	hoverVoto[nomeProdotto] = 0;
 }
 </script>
 
@@ -208,7 +218,9 @@ async function lasciaRecensione(nomeProdotto, voto) {
 										<h3>Recensioni per {{ prod.nome }}</h3>
 										<ul class="lista-recensioni">
 											<li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
-												<strong>{{ r.Voto }} ⭐</strong> - {{ r.Commento || 'Nessun commento' }}
+												<strong>{{ r.Voto }} ⭐</strong>
+												<span v-if="r.Username"> - <b>{{ r.Username }}</b></span>
+												<span> - {{ r.Commento || 'Nessun commento' }}</span>
 											</li>
 										</ul>
 									</div>
