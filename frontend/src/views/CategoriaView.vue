@@ -276,7 +276,6 @@ async function inviaRecensioneOverlay() {
 				<!-- Overlay per inserimento recensione -->
 				<div v-if="overlayRecensione.aperto" class="recensione-commento-overlay">
 					<div class="recensione-commento-panel">
-						<button class="close-btn" @click="chiudiOverlayRecensione">×</button>
 						<h3 class="recensione-commento-titolo">Lascia una recensione per <b>{{ overlayRecensione.nomeProdotto }}</b></h3>
 						<div class="recensione-commento-stelle">
 							<span v-for="i in 5" :key="i"

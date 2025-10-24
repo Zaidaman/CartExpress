@@ -34,6 +34,7 @@
     margin-bottom: 12px;
     display: flex;
     gap: 2px;
+    justify-content: center;
 }
 .recensione-commento-stelle span {
     cursor: pointer;
@@ -61,7 +62,7 @@
 .recensione-commento-bottoni {
     display: flex;
     gap: 16px;
-    justify-content: flex-end;
+    justify-content: center;
 }
 .recensione-commento-invia {
     background: #2d8cf0;
