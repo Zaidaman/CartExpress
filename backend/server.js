@@ -300,7 +300,7 @@ app.post('/api/login', async (req, res) => {
     }
     try {
         const [rows] = await pool.query(
-            'SELECT Username, Email, Ruolo FROM Utenti WHERE Email = ? AND Password = ?',
+            'SELECT IdUtente, Username, Email, Ruolo FROM Utenti WHERE Email = ? AND Password = ?',
             [email, password]
         );
         if (rows.length === 1) {

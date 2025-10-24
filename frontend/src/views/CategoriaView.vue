@@ -138,29 +138,42 @@ async function caricaRecensioni(nomeProdotto) {
 
 // Lascia recensione
 async function lasciaRecensione(nomeProdotto, voto) {
-	votoSelezionato[nomeProdotto] = voto;
-	const commento = prompt('Inserisci un commento (opzionale, MAX 50 Caratteri):');
-	try {
-		const res = await fetch('http://localhost:3000/api/recensioni', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ nomeProdotto, voto, commento })
-		});
-		if (res.status === 409) {
-			mostraNotifica('Hai già recensito questo prodotto!');
-		} else if (res.ok) {
-			mostraNotifica('Recensione inviata con successo!');
-			caricaRecensioni(nomeProdotto);
-		} else {
-			mostraNotifica('Errore nell’invio della recensione.');
+		votoSelezionato[nomeProdotto] = voto;
+		const commento = prompt('Inserisci un commento (opzionale, MAX 50 Caratteri):');
+		// Recupera IdUtente dall'oggetto utente in localStorage
+		let IdUtente = null;
+		const utenteStr = localStorage.getItem('utente');
+		if (utenteStr) {
+			try {
+				const utenteObj = JSON.parse(utenteStr);
+				IdUtente = utenteObj.IdUtente;
+			} catch {}
 		}
-	} catch (err) {
-		console.error('Errore salvataggio recensione:', err);
-		mostraNotifica('Errore di rete nel salvataggio della recensione.');
-	}
-	// Reset stelle dopo invio
-	votoSelezionato[nomeProdotto] = 0;
-	hoverVoto[nomeProdotto] = 0;
+		if (!IdUtente) {
+			mostraNotifica('Devi essere loggato per lasciare una recensione.');
+			return;
+		}
+		try {
+			const res = await fetch('http://localhost:3000/api/recensioni', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ nomeProdotto, voto, commento, idUtente: IdUtente })
+			});
+			if (res.status === 409) {
+				mostraNotifica('Hai già recensito questo prodotto!');
+			} else if (res.ok) {
+				mostraNotifica('Recensione inviata con successo!');
+				caricaRecensioni(nomeProdotto);
+			} else {
+				mostraNotifica('Errore nell’invio della recensione.');
+			}
+		} catch (err) {
+			console.error('Errore salvataggio recensione:', err);
+			mostraNotifica('Errore di rete nel salvataggio della recensione.');
+		}
+		// Reset stelle dopo invio
+		votoSelezionato[nomeProdotto] = 0;
+		hoverVoto[nomeProdotto] = 0;
 }
 </script>
 
