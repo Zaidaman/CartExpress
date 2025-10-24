@@ -118,9 +118,18 @@ function mostraNotifica(messaggio) {
 
 const recensioni = reactive({});
 const mediaRecensioni = reactive({});
+
 const hoverVoto = reactive({});
 const votoSelezionato = reactive({});
 const prodottoAperto = ref(null);
+
+// Overlay recensione
+const overlayRecensione = reactive({
+	aperto: false,
+	nomeProdotto: null,
+	voto: 0,
+	commento: '',
+});
 
 // Carica recensioni e media per un prodotto
 async function caricaRecensioni(nomeProdotto) {
@@ -136,49 +145,68 @@ async function caricaRecensioni(nomeProdotto) {
     }
 }
 
-// Lascia recensione
-async function lasciaRecensione(nomeProdotto, voto) {
-		votoSelezionato[nomeProdotto] = voto;
-		const commento = prompt('Inserisci un commento (opzionale, MAX 50 Caratteri):');
-		// Recupera IdUtente dall'oggetto utente in localStorage
-		let IdUtente = null;
-		const utenteStr = localStorage.getItem('utente');
-		if (utenteStr) {
-			try {
-				const utenteObj = JSON.parse(utenteStr);
-				IdUtente = utenteObj.IdUtente;
-			} catch {}
-		}
-		if (!IdUtente) {
-			mostraNotifica('Devi essere loggato per lasciare una recensione.');
-			return;
-		}
+
+function apriOverlayRecensione(nomeProdotto, voto) {
+	overlayRecensione.aperto = true;
+	overlayRecensione.nomeProdotto = nomeProdotto;
+	overlayRecensione.voto = voto;
+	overlayRecensione.commento = '';
+}
+
+function chiudiOverlayRecensione() {
+	overlayRecensione.aperto = false;
+	overlayRecensione.nomeProdotto = null;
+	overlayRecensione.voto = 0;
+	overlayRecensione.commento = '';
+}
+
+async function inviaRecensioneOverlay() {
+	const nomeProdotto = overlayRecensione.nomeProdotto;
+	const voto = overlayRecensione.voto;
+	const commento = overlayRecensione.commento.slice(0, 50);
+	votoSelezionato[nomeProdotto] = voto;
+	// Recupera IdUtente dall'oggetto utente in localStorage
+	let IdUtente = null;
+	const utenteStr = localStorage.getItem('utente');
+	if (utenteStr) {
 		try {
-			const res = await fetch('http://localhost:3000/api/recensioni', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ nomeProdotto, voto, commento, idUtente: IdUtente })
-			});
-			if (res.status === 409) {
-				mostraNotifica('Hai già recensito questo prodotto!');
-			} else if (res.ok) {
-				mostraNotifica('Recensione inviata con successo!');
-				caricaRecensioni(nomeProdotto);
-			} else {
-				mostraNotifica('Errore nell’invio della recensione.');
-			}
-		} catch (err) {
-			console.error('Errore salvataggio recensione:', err);
-			mostraNotifica('Errore di rete nel salvataggio della recensione.');
+			const utenteObj = JSON.parse(utenteStr);
+			IdUtente = utenteObj.IdUtente;
+		} catch {}
+	}
+	if (!IdUtente) {
+		mostraNotifica('Devi essere loggato per lasciare una recensione.');
+		chiudiOverlayRecensione();
+		return;
+	}
+	try {
+		const res = await fetch('http://localhost:3000/api/recensioni', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ nomeProdotto, voto, commento, idUtente: IdUtente })
+		});
+		if (res.status === 409) {
+			mostraNotifica('Hai già recensito questo prodotto!');
+		} else if (res.ok) {
+			mostraNotifica('Recensione inviata con successo!');
+			caricaRecensioni(nomeProdotto);
+		} else {
+			mostraNotifica('Errore nell’invio della recensione.');
 		}
-		// Reset stelle dopo invio
-		votoSelezionato[nomeProdotto] = 0;
-		hoverVoto[nomeProdotto] = 0;
+	} catch (err) {
+		console.error('Errore salvataggio recensione:', err);
+		mostraNotifica('Errore di rete nel salvataggio della recensione.');
+	}
+	// Reset stelle dopo invio
+	votoSelezionato[nomeProdotto] = 0;
+	hoverVoto[nomeProdotto] = 0;
+	chiudiOverlayRecensione();
 }
 </script>
 
 <template>
 	<div id="notifica-container" style="position: fixed;top: 20px;right: 20px;z-index: 9999;"></div>
+
 	<div class="categorie-prodotti-wrapper">
 		<div class="dropdown-categorie-wrapper">
 			<button class="btn-dropdown-categorie" @click="showDropdown = !showDropdown">
@@ -215,10 +243,10 @@ async function lasciaRecensione(nomeProdotto, voto) {
 							<div class="recensioni-container">
 								<div class="media-voto">Valutazione: {{ mediaRecensioni[prod.nome] || 'N/A' }} ⭐</div>
 								<div class="stelle" @mouseleave="hoverVoto[prod.nome]=0">
-									<span v-for="i in 5" :key="i" 
+									<span v-for="i in 5" :key="i"
 										:class="{ active: i <= (hoverVoto[prod.nome] || votoSelezionato[prod.nome] || 0) }"
 										@mouseover="hoverVoto[prod.nome]=i"
-										@click="lasciaRecensione(prod.nome, i)">
+										@click="apriOverlayRecensione(prod.nome, i)">
 										★
 									</span>
 								</div>
@@ -244,6 +272,27 @@ async function lasciaRecensione(nomeProdotto, voto) {
 				</ul>
 			</div>
 		</div>
+
+				<!-- Overlay per inserimento recensione -->
+				<div v-if="overlayRecensione.aperto" class="recensione-commento-overlay">
+					<div class="recensione-commento-panel">
+						<button class="close-btn" @click="chiudiOverlayRecensione">×</button>
+						<h3 class="recensione-commento-titolo">Lascia una recensione per <b>{{ overlayRecensione.nomeProdotto }}</b></h3>
+						<div class="recensione-commento-stelle">
+							<span v-for="i in 5" :key="i"
+								:class="{ active: i <= overlayRecensione.voto }"
+								@mouseover="overlayRecensione.voto = i"
+								@click="overlayRecensione.voto = i"
+							>★</span>
+						</div>
+						<label for="commento-input" class="recensione-commento-label">Commento (opzionale, max 50 caratteri):</label>
+						<input id="commento-input" type="text" v-model="overlayRecensione.commento" maxlength="50" class="recensione-commento-input" />
+						<div class="recensione-commento-bottoni">
+							<button @click="inviaRecensioneOverlay" class="recensione-commento-invia">Invia</button>
+							<button @click="chiudiOverlayRecensione" class="recensione-commento-annulla">Annulla</button>
+						</div>
+					</div>
+				</div>
 	</div>
 </template>
 

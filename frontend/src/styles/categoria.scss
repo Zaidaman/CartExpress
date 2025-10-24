@@ -1,3 +1,95 @@
+// Overlay recensione
+.recensione-commento-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,0.25);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.recensione-commento-panel {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    padding: 32px 28px 24px 28px;
+    min-width: 320px;
+    max-width: 90vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.recensione-commento-titolo {
+    margin-bottom: 18px;
+}
+
+.recensione-commento-stelle {
+    font-size: 22px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 2px;
+}
+.recensione-commento-stelle span {
+    cursor: pointer;
+    color: #ccc;
+}
+.recensione-commento-stelle .active {
+    color: gold;
+}
+
+.recensione-commento-label {
+    font-weight: 500;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.recensione-commento-input {
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 1em;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 18px;
+}
+
+.recensione-commento-bottoni {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+}
+.recensione-commento-invia {
+    background: #2d8cf0;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 1em;
+    cursor: pointer;
+}
+.recensione-commento-annulla {
+    background: #eee;
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-size: 1em;
+    cursor: pointer;
+}
+.recensione-commento-panel .close-btn {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+}
 .nome-prodotto {
 	margin-right: 1em;
 }
