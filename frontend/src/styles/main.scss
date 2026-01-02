@@ -1,61 +1,80 @@
 @use 'sass:color';
 
-$background-color: #C46000;
-$button-bg: #eee;
-$button-text: #000;
-$text-color: #000;
+
+$background-color: #f5f6fa;
+$primary-accent: #ff9800;
+$primary-accent-dark: #fb8c00;
+$secondary: #424242;
+$success: #43a047;
+$danger: #e53935;
+$card-bg: #fff;
+$card-shadow: 0 4px 16px rgba(0,0,0,0.08);
+$button-bg: linear-gradient(90deg, #ff9800 60%, #ffb74d 100%);
+$button-text: #fff;
+$nav-bg: #fff;
+$nav-link: #ff9800;
+$nav-link-hover: #fb8c00;
+$text-color: #424242;
+
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: $background-color;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #f5f6fa 0%, #ffe0b2 100%);
   color: $text-color;
   text-align: center;
 }
 
-button {
-  background-color: $button-bg;
+
+button, .btn {
+  background: $button-bg;
   color: $button-text;
-  padding: 10px 20px;
+  padding: 10px 24px;
   margin: 10px;
   border: none;
   cursor: pointer;
   font-size: 1rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.2s, box-shadow 0.2s;
 }
 
-button:hover {
-  background-color: color.adjust($button-bg, $lightness: -10%);
+button:hover, .btn:hover {
+  background: linear-gradient(90deg, $primary-accent-dark 60%, #ffa726 100%);
+  box-shadow: 0 4px 16px rgba(255,152,0,0.12);
 }
+
 
 .view-container {
-	background: #fff;
-	color: #333;
-	max-width: 800px;
-	margin: 30px auto 0 auto;
-	padding: 2rem 1.5rem;
-	border-radius: 16px;
-	box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  background: $card-bg;
+  color: $text-color;
+  max-width: 800px;
+  margin: 30px auto 0 auto;
+  padding: 2rem 1.5rem;
+  border-radius: 20px;
+  box-shadow: $card-shadow;
 }
 
-h1, h2 {
-	color: #C46000;
-	margin-bottom: 1rem;
-	font-weight: 700;
+
+h1, h2, h3 {
+  color: $primary-accent;
+  margin-bottom: 1rem;
+  font-weight: 700;
 }
+
 
 .card {
-	background: #f9f9f9;
-	border-radius: 12px;
-	box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-	padding: 1.2rem;
-	margin-bottom: 1.5rem;
-	transition: box-shadow 0.2s;
+  background: #fffbe7;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 1.2rem;
+  margin-bottom: 1.5rem;
+  transition: box-shadow 0.2s, background 0.2s;
 }
 
 .card:hover {
-	box-shadow: 0 4px 16px rgba(196,96,0,0.12);
+  box-shadow: 0 4px 16px rgba(255,152,0,0.14);
+  background: #fff;
 }
 
 .placeholder {
@@ -64,42 +83,71 @@ h1, h2 {
 	margin-top: 2rem;
 }
 
+
+nav {
+  background: $nav-bg;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
 nav a, 
 nav router-link {
   font-size: 1.3rem;
   font-weight: 600;
   margin-right: 1%;
   margin-left: 1%;
-  color: #C46000;
+  color: $nav-link;
   text-decoration: none;
+  transition: color 0.2s;
 }
 
 nav a:hover,
 nav router-link:hover {
-  color: #a34d00;
+  color: $nav-link-hover;
 }
 
 ul {
   list-style-type: none;
 }
 
+
 .view-container button {
-  background-color: #C46000;
-  color: #fff;
+  background: $button-bg;
+  color: $button-text;
   font-size: 1.2rem;
   padding: 12px 24px;
   border-radius: 8px;
   margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .view-container button:hover {
-  background-color: #a34d00;
+  background: linear-gradient(90deg, $primary-accent-dark 60%, #ffa726 100%);
 }
 
-nav {
-  background: #f2f2f2;
-  padding: 10px;
-}
+
 router-link {
   margin-right: 10px;
+}
+
+input, select {
+  border: 1px solid $primary-accent;
+  border-radius: 6px;
+  padding: 0.5em;
+  font-size: 1rem;
+  background: #fff;
+  color: $text-color;
+  margin: 0.3em 0;
+  transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+  border-color: $primary-accent-dark;
+  outline: none;
+}
+
+.success {
+  color: $success;
+}
+.danger {
+  color: $danger;
 }
