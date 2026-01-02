@@ -6,6 +6,7 @@ const totale = ref(0);
 const totaleProdotti = ref(0);
 const dataRitiro = ref("");
 const utente = ref(null);
+const idUtente = ref(null);
 
 function calcolaTotaleProdotti() {
     totaleProdotti.value = carrello.value.reduce((acc, prod) => acc + prod.quantita, 0);
@@ -16,7 +17,14 @@ function calcolaTotale() {
 }
 
 function leggiCarrelloDaCookie() {
-    const cookie = document.cookie.split('; ').find(row => row.startsWith('carrello='));
+    if (!idUtente.value) {
+        carrello.value = [];
+        calcolaTotale();
+        calcolaTotaleProdotti();
+        return;
+    }
+    const cookieName = `carrello_${idUtente.value}`;
+    const cookie = document.cookie.split('; ').find(row => row.startsWith(cookieName + '='));
     if (cookie) {
         try {
             const arr = JSON.parse(decodeURIComponent(cookie.split('=')[1]));
@@ -35,17 +43,23 @@ function leggiCarrelloDaCookie() {
     calcolaTotaleProdotti();
 }
 
+
 onMounted(() => {
-    leggiCarrelloDaCookie();
     // Recupera utente da localStorage
     const utenteSalvato = localStorage.getItem('utente');
     if (utenteSalvato) {
         try {
             utente.value = JSON.parse(utenteSalvato);
+            idUtente.value = utente.value.IdUtente;
         } catch {
             utente.value = null;
+            idUtente.value = null;
         }
+    } else {
+        utente.value = null;
+        idUtente.value = null;
     }
+    leggiCarrelloDaCookie();
 });
 
 async function processaTransazione() {
@@ -97,7 +111,8 @@ async function processaTransazione() {
 
 
 function aggiornaCookieCarrello() {
-    document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello.value))}; path=/; max-age=604800`; // 7 giorni
+    if (!idUtente.value) return;
+    document.cookie = `carrello_${idUtente.value}=${encodeURIComponent(JSON.stringify(carrello.value))}; path=/; max-age=604800`;
 }
 
 function incrementaQuantita(item) {
@@ -129,7 +144,9 @@ function decrementaQuantita(item) {
         totale.value = 0;
         totaleProdotti.value = 0;
         dataRitiro.value = '';
-        document.cookie = 'carrello=; path=/; max-age=0';
+        if (idUtente.value) {
+            document.cookie = `carrello_${idUtente.value}=; path=/; max-age=0`;
+        }
     }
 </script>
 
@@ -137,7 +154,7 @@ function decrementaQuantita(item) {
     <div class="carrelli-flex">
         <div class="carrello-container">
             <h2>Il tuo carrello</h2>
-            <div v-if="carrello.length">
+            <div v-if="idUtente && carrello.length">
                 <table class="tabella-carrello">
                     <thead>
                         <tr>
@@ -159,7 +176,8 @@ function decrementaQuantita(item) {
                     </tbody>
                 </table>
             </div>
-            <p v-else>Il carrello è vuoto.</p>
+            <p v-else-if="idUtente">Il carrello è vuoto.</p>
+            <p v-else>Effettua il login per visualizzare il carrello.</p>
         </div>
 
         <div class="checkout-container">

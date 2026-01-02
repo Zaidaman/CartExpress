@@ -1,5 +1,4 @@
 <script setup>
-import '@/styles/presentazione.scss';
 import { useRouter } from 'vue-router';
 const router = useRouter();
 

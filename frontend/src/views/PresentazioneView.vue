@@ -19,4 +19,6 @@
 	</div>
 </template>
 
-
+<style lang="scss" scoped>
+@use '../styles/presentazione.scss' as *;
+</style>

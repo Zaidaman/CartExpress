@@ -1,4 +1,5 @@
 <script setup>
+
 import { ref, onMounted, reactive } from 'vue';
 
 const showDropdown = ref(false);
@@ -8,9 +9,25 @@ const prodotti = ref([]);
 const quantitaProdotti = reactive({});
 const categoriaSelezionata = ref(null);
 
-// Carica tutte le categorie all'avvio
+
+const utente = ref(null);
+const idUtente = ref(null);
 
 onMounted(async () => {
+	// Recupera utente da localStorage
+	const utenteSalvato = localStorage.getItem('utente');
+	if (utenteSalvato) {
+		try {
+			utente.value = JSON.parse(utenteSalvato);
+			idUtente.value = utente.value.IdUtente;
+		} catch {
+			utente.value = null;
+			idUtente.value = null;
+		}
+	} else {
+		utente.value = null;
+		idUtente.value = null;
+	}
 	try {
 		// Carica categorie
 		const resCat = await fetch('http://localhost:3000/api/prodotti/GetCategorie');
@@ -59,6 +76,10 @@ function aggiornaQuantita(nomeProdotto, valore) {
 }
 
 function salvaInCookie(prodotto) {
+	if (!idUtente.value) {
+		alert('Devi essere loggato per aggiungere prodotti al carrello.');
+		return;
+	}
 	const quantita = quantitaProdotti[prodotto.nome] || 1;
 	if (!quantita || isNaN(quantita) || quantita <= 0) {
 		alert('Inserisci una quantità valida per il prodotto.');
@@ -72,7 +93,8 @@ function salvaInCookie(prodotto) {
 	};
 	// Recupera cookie esistente
 	let carrello = [];
-	const cookie = document.cookie.split('; ').find(row => row.startsWith('carrello='));
+	const cookieName = `carrello_${idUtente.value}`;
+	const cookie = document.cookie.split('; ').find(row => row.startsWith(cookieName + '='));
 	if (cookie) {
 		try {
 			carrello = JSON.parse(decodeURIComponent(cookie.split('=')[1]));
@@ -86,7 +108,7 @@ function salvaInCookie(prodotto) {
 		carrello.push(item);
 	}
 	// Salva cookie (scadenza 7 giorni)
-	document.cookie = `carrello=${encodeURIComponent(JSON.stringify(carrello))}; path=/; max-age=${604800}`;
+	document.cookie = `${cookieName}=${encodeURIComponent(JSON.stringify(carrello))}; path=/; max-age=604800`;
 	// Reset quantità a 1 dopo il salvataggio
 	quantitaProdotti[prodotto.nome] = 1;
 	mostraNotifica('Prodotto salvato nel carrello!');
