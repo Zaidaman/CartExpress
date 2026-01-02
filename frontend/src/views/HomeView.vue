@@ -8,7 +8,9 @@ const loading = ref(true);
 const errore = ref(null);
 const utente = ref(null); // 👈 Aggiunto per gestire l'utente
 const prodottiScrollRef = ref(null);
+
 let scrollInterval = null;
+let scrollDirection = 1; // 1 = avanti, -1 = indietro
 
 onMounted(async () => {
   try {
@@ -36,15 +38,17 @@ onMounted(async () => {
   // 👇 Avvia lo scroll automatico
     scrollInterval = setInterval(() => {
       const el = prodottiScrollRef.value;
-      if (el && el.scrollWidth > el.clientWidth) {  
-        // Aumenta la velocità (da 2 a 8 pixel per tick)
+      if (el && el.scrollWidth > el.clientWidth) {
         const scrollStep = 8;
-        if (el.scrollLeft + el.clientWidth >= el.scrollWidth - scrollStep) {
-          // Reset completo all'inizio (istantaneo)
-          el.scrollLeft = 0;
-        } else {
-          el.scrollBy({ left: scrollStep, behavior: 'smooth' });
+        // Se stiamo andando avanti e siamo quasi alla fine
+        if (scrollDirection === 1 && el.scrollLeft + el.clientWidth >= el.scrollWidth - scrollStep) {
+          scrollDirection = -1;
         }
+        // Se stiamo andando indietro e siamo quasi all'inizio
+        else if (scrollDirection === -1 && el.scrollLeft <= scrollStep) {
+          scrollDirection = 1;
+        }
+        el.scrollBy({ left: scrollStep * scrollDirection, behavior: 'smooth' });
       }
     }, 30);
 });
