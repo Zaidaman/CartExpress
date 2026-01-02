@@ -10,14 +10,14 @@ function logout() {
 
 <template>
   <div>
-    <nav v-if="$route.name !== 'presentazione'">
+    <nav v-if="$route.name !== 'presentazione' && $route.name !== 'login'">
       <router-link to="/home">Home</router-link> |
       <router-link to="/categoria">Categoria</router-link> |
       <router-link to="/carrello">Carrello</router-link> |
       <router-link to="/ricerca">Ricerca</router-link>
       <button style="margin-left:1rem" @click="logout">Logout</button>
     </nav>
-    <hr v-if="$route.name !== 'presentazione'" />
+    <hr v-if="$route.name !== 'presentazione' && $route.name !== 'login'" />
 
     <router-view />
   </div>
