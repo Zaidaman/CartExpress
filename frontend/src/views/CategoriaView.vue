@@ -249,11 +249,11 @@ async function inviaRecensioneOverlay() {
 			</div>
 		</div>
 		<div class="prodotti-container">
+			<h2 style="margin-top: 0; margin-bottom: 1.2em;">Prodotti</h2>
 			<div v-if="prodotti.length === 0">
 				<p>Nessun prodotto trovato.</p>
 			</div>
 			<div v-else>
-				<h2>Prodotti</h2>
 				<ul>
 					<li v-for="prod in prodotti" :key="prod.nome" class="prodotto-item">
 						<img :src="`/${prod.immagine}`" alt="" />
