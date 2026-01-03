@@ -282,8 +282,8 @@ async function inviaRecensioneOverlay() {
 										<ul class="lista-recensioni">
 											<li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
 												<strong>{{ r.Voto }} ⭐</strong>
-												<span v-if="r.Username"> - <b>{{ r.Username }}</b></span>
-												<span> - {{ r.Commento || 'Nessun commento' }}</span>
+												<span v-if="r.Username"><b>{{ r.Username }}</b></span>
+												<span>{{ r.Commento || 'Nessun commento' }}</span>
 											</li>
 										</ul>
 									</div>
