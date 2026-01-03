@@ -279,13 +279,14 @@ async function inviaRecensioneOverlay() {
 									<div class="recensioni-panel">
 										<button class="close-btn" @click="prodottoAperto = null">×</button>
 										<h3>Recensioni per {{ prod.nome }}</h3>
-										<ul class="lista-recensioni">
-											<li v-for="r in (recensioni[prod.nome] || [])" :key="r.DataCreazione">
+										<ul v-if="(recensioni[prod.nome] || []).length" class="lista-recensioni">
+											<li v-for="r in recensioni[prod.nome]" :key="r.DataCreazione">
 												<strong>{{ r.Voto }} ⭐</strong>
 												<span v-if="r.Username"><b>{{ r.Username }}</b></span>
 												<span>{{ r.Commento || 'Nessun commento' }}</span>
 											</li>
 										</ul>
+										<p v-else>Nessuna recensione disponibile per questo prodotto.</p>
 									</div>
 								</div>
 							</div>
