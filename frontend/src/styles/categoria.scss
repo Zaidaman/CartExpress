@@ -115,7 +115,7 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	padding: 0;
-	padding-left: 260px;
+	padding-left: 90px;
 	box-shadow: none;
 }
 
@@ -144,7 +144,6 @@ body {
     border-radius: 16px;
     box-shadow: 0 4px 24px rgba(0,0,0,0.08);
     display: block;
-    margin: 0;
 }
 
 .prodotti-container ul {
@@ -200,7 +199,7 @@ body {
 
 .dropdown-categorie-wrapper {
 	position: absolute;
-	top: 70px;
+	top: 80px;
 	left: 24px;
 	z-index: 100;
 }
@@ -224,8 +223,8 @@ body {
 
 .dropdown-categorie-menu {
 	position: absolute;
-	top: 44px;
-	left: 0;
+	top: 53.5px;
+	left: 10px;
 	background: #fff;
 	border: 1px solid #e0e0e0;
 	border-radius: 8px;
@@ -243,23 +242,24 @@ body {
     align-items: flex-start;
 }
 .dropdown-categorie-menu li {
-	margin: 0;
-	padding: 0;
+    width: 90%;
 }
 .dropdown-categorie-menu button {
         width: 100%;
         background: none;
         border: none;
-        text-align: left;
+        align-items: center;
+        justify-content: flex-end;
+        text-align: right;
         padding: 10px 18px;
         font-size: 1em;
         font-weight: 600;
         color: #a34d00;
         cursor: pointer;
         display: flex;
-        align-items: center;
         gap: 8px;
         transition: background 0.2s, color 0.2s;
+        flex-direction: row-reverse;
     }
     .dropdown-categorie-menu button:hover {
         background: #f7f7f7;
@@ -273,7 +273,6 @@ body {
     margin-left: 0;
     flex: 1 1 auto;
 }
-
 
 img {
 	max-width: 40px;

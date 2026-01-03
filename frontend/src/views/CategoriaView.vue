@@ -232,7 +232,7 @@ async function inviaRecensioneOverlay() {
 	<div class="categorie-prodotti-wrapper">
 		<div class="dropdown-categorie-wrapper">
 			<button class="btn-dropdown-categorie" @click="showDropdown = !showDropdown">
-				Seleziona categoria ▼
+				☰
 			</button>
 			<div v-if="showDropdown" class="dropdown-categorie-menu">
 				<ul>
