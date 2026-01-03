@@ -6,14 +6,23 @@
 	border-radius: 12px;
 	box-shadow: 0 2px 12px rgba(0,0,0,0.08);
 }
+
 h1 {
 	color: #2c3e50;
 	margin-bottom: 1rem;
 }
+
 ul {
+	text-align: left;
+	list-style-type: square;
 	margin: 1rem 0;
 	padding-left: 1.2rem;
 }
+
+li::marker {
+	color: #fc7a00;
+}
+
 .btn-login {
 	background: #3498db;
 	color: #fff;
@@ -24,6 +33,7 @@ ul {
 	cursor: pointer;
 	transition: background 0.2s;
 }
+
 .btn-login:hover {
 	background: #217dbb;
 }

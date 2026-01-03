@@ -220,7 +220,6 @@ async function inviaRecensioneOverlay() {
 		console.error('Errore salvataggio recensione:', err);
 		mostraNotifica('Errore di rete nel salvataggio della recensione.');
 	}
-	// Reset stelle dopo invio
 	votoSelezionato[nomeProdotto] = 0;
 	hoverVoto[nomeProdotto] = 0;
 	chiudiOverlayRecensione();
@@ -284,7 +283,7 @@ async function azzeraFiltri() {
 						</button>
 					</li>
 				</ul>
-				<p class="filtri-title">---- Filtri di Ricerca ----</p>
+				<p class="filtri-title">⎯⎯⎯⎯ Filtri di Ricerca ⎯⎯⎯⎯</p>
 				<div class="filtri-ricerca">
 					<button @click="filtroPrezzo='asc'; filtroValutazione=null; applicaFiltri()">
 						Prezzo ↑
@@ -348,27 +347,25 @@ async function azzeraFiltri() {
 				</ul>
 			</div>
 		</div>
-
-				<!-- Overlay per inserimento recensione -->
-				<div v-if="overlayRecensione.aperto" class="recensione-commento-overlay">
-					<div class="recensione-commento-panel">
-						<h3 class="recensione-commento-titolo">Lascia una recensione per <b>{{ overlayRecensione.nomeProdotto }}</b></h3>
-						<div class="recensione-commento-stelle">
-							<span v-for="i in 5" :key="i"
-								:class="{ active: i <= overlayRecensione.voto }"
-								@mouseover="overlayRecensione.voto = i"
-								@click="overlayRecensione.voto = i"
-							>★</span>
-						</div>
-						<label for="commento-input" class="recensione-commento-label">Commento (opzionale, max 50 caratteri):</label>
-						<input id="commento-input" type="text" v-model="overlayRecensione.commento" maxlength="50" class="recensione-commento-input" />
-						<div class="recensione-commento-bottoni">
-							<button @click="inviaRecensioneOverlay" class="recensione-commento-invia">Invia</button>
-							<button @click="chiudiOverlayRecensione" class="recensione-commento-annulla">Annulla</button>
-						</div>
+			<div v-if="overlayRecensione.aperto" class="recensione-commento-overlay">
+				<div class="recensione-commento-panel">
+					<h3 class="recensione-commento-titolo">Lascia una recensione per <b>{{ overlayRecensione.nomeProdotto }}</b></h3>
+					<div class="recensione-commento-stelle">
+						<span v-for="i in 5" :key="i"
+							:class="{ active: i <= overlayRecensione.voto }"
+							@mouseover="overlayRecensione.voto = i"
+							@click="overlayRecensione.voto = i"
+						>★</span>
+					</div>
+					<label for="commento-input" class="recensione-commento-label">Commento (opzionale, max 50 caratteri):</label>
+					<input id="commento-input" type="text" v-model="overlayRecensione.commento" maxlength="50" class="recensione-commento-input" />
+					<div class="recensione-commento-bottoni">
+						<button @click="inviaRecensioneOverlay" class="recensione-commento-invia">Invia</button>
+						<button @click="chiudiOverlayRecensione" class="recensione-commento-annulla">Annulla</button>
 					</div>
 				</div>
-	</div>
+			</div>
+		</div>
 </template>
 
 <style lang="scss" scoped>

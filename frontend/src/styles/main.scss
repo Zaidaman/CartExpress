@@ -88,8 +88,7 @@ nav {
   padding: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
-nav a, 
-nav router-link {
+nav a, nav router-link {
   font-size: 1.3rem;
   font-weight: 600;
   margin-right: 1%;
@@ -99,8 +98,7 @@ nav router-link {
   transition: color 0.2s;
 }
 
-nav a:hover,
-nav router-link:hover {
+nav a:hover, nav router-link:hover {
   color: $nav-link-hover;
 }
 
@@ -145,6 +143,7 @@ input:focus, select:focus {
 .success {
   color: $success;
 }
+
 .danger {
   color: $danger;
 }

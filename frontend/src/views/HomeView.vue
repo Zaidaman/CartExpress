@@ -6,7 +6,7 @@ const router = useRouter();
 const prodotti = ref([]);
 const loading = ref(true);
 const errore = ref(null);
-const utente = ref(null); // 👈 Aggiunto per gestire l'utente
+const utente = ref(null);
 const prodottiScrollRef = ref(null);
 
 let scrollInterval = null;
@@ -25,7 +25,7 @@ onMounted(async () => {
     loading.value = false;
   }
 
-  // 👇 Recupero utente da localStorage
+  // Recupero utente da localStorage
   const utenteSalvato = localStorage.getItem('utente');
   if (utenteSalvato) {
     try {
@@ -35,16 +35,14 @@ onMounted(async () => {
     }
   }
 
-  // 👇 Avvia lo scroll automatico
+  // Avvia lo scroll automatico
     scrollInterval = setInterval(() => {
       const el = prodottiScrollRef.value;
       if (el && el.scrollWidth > el.clientWidth) {
         const scrollStep = 8;
-        // Se stiamo andando avanti e siamo quasi alla fine
         if (scrollDirection === 1 && el.scrollLeft + el.clientWidth >= el.scrollWidth - scrollStep) {
           scrollDirection = -1;
         }
-        // Se stiamo andando indietro e siamo quasi all'inizio
         else if (scrollDirection === -1 && el.scrollLeft <= scrollStep) {
           scrollDirection = 1;
         }

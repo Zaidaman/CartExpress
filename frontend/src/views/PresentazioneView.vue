@@ -2,7 +2,7 @@
 	<div class="presentazione">
 		<h1>Benvenuto su CartExpress!</h1>
 		<p>
-			CartExpress è il tuo sito per la gestione semplice e veloce della spesa online. Ecco cosa puoi fare:
+			CartExpress è il tuo sito per la gestione semplice<br>e veloce della spesa online.<br><br>Ecco cosa puoi fare:
 		</p>
 		<ul>
 			<li>Visualizzare le categorie di prodotti disponibili</li>

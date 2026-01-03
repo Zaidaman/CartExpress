@@ -7,7 +7,6 @@ import CarrelloView from '../views/CarrelloView.vue';
 import RicercaView from '../views/RicercaView.vue';
 import PresentazioneView from '@/views/PresentazioneView.vue';
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
