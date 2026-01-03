@@ -286,13 +286,13 @@ async function azzeraFiltri() {
 				</ul>
 				<p class="filtri-title">---- Filtri di Ricerca ----</p>
 				<div class="filtri-ricerca">
-					<button @click="filtroPrezzo='asc'; applicaFiltri()">
+					<button @click="filtroPrezzo='asc'; filtroValutazione=null; applicaFiltri()">
 						Prezzo ↑
 					</button>
-					<button @click="filtroPrezzo='desc'; applicaFiltri()">
+					<button @click="filtroPrezzo='desc'; filtroValutazione=null; applicaFiltri()">
 						Prezzo ↓
 					</button>
-					<button @click="filtroValutazione='desc'; applicaFiltri()">
+					<button @click="filtroValutazione='desc'; filtroPrezzo=null; applicaFiltri()">
 						Valutazione ⭐
 					</button>
 					<button class="reset-filtri" @click="azzeraFiltri">
