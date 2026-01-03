@@ -1,6 +1,6 @@
 .carrello-container {
 	max-width: 600px;
-	margin: 2rem auto;
+	margin: 0 auto auto 30%;
 	padding: 2rem;
 	background: #fff;
 	border-radius: 12px;
@@ -111,15 +111,16 @@
 	}
 
 	.checkout-container {
-		order: 1;
+		order: 2;
 		width: 100%;
 		max-width: 400px;
-		left: 0;
+		margin:0;
 	}
 
 	.carrello-container {
-		order: 2;
+		order: 1;
 		width: 100%;
+		margin: 0;
 		max-width: 600px;
 	}
 
