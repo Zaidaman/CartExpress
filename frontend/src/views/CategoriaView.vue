@@ -9,9 +9,11 @@ const prodotti = ref([]);
 const quantitaProdotti = reactive({});
 const categoriaSelezionata = ref(null);
 
-
 const utente = ref(null);
 const idUtente = ref(null);
+
+const filtroPrezzo = ref(null);      // 'asc' | 'desc' | null
+const filtroValutazione = ref(null); // 'asc' | 'desc' | null
 
 onMounted(async () => {
 	// Recupera utente da localStorage
@@ -167,7 +169,6 @@ async function caricaRecensioni(nomeProdotto) {
     }
 }
 
-
 function apriOverlayRecensione(nomeProdotto, voto) {
 	overlayRecensione.aperto = true;
 	overlayRecensione.nomeProdotto = nomeProdotto;
@@ -224,11 +225,48 @@ async function inviaRecensioneOverlay() {
 	hoverVoto[nomeProdotto] = 0;
 	chiudiOverlayRecensione();
 }
+
+function applicaFiltri() {
+	let lista = [...prodotti.value];
+
+	// Ordina per prezzo
+	if (filtroPrezzo.value) {
+		lista.sort((a, b) =>
+			filtroPrezzo.value === 'asc'
+				? a.prezzo - b.prezzo
+				: b.prezzo - a.prezzo
+		);
+	}
+
+	// Ordina per valutazione media
+	if (filtroValutazione.value) {
+		lista.sort((a, b) => {
+			const votoA = mediaRecensioni[a.nome] || 0;
+			const votoB = mediaRecensioni[b.nome] || 0;
+			return filtroValutazione.value === 'asc'
+				? votoA - votoB
+				: votoB - votoA;
+		});
+	}
+
+	prodotti.value = lista;
+}
+
+async function azzeraFiltri() {
+	filtroPrezzo.value = null;
+	filtroValutazione.value = null;
+
+	// Ricarica i prodotti della categoria corrente
+	if (categoriaSelezionata.value === null) {
+		await caricaProdotti(null);
+	} else {
+		await caricaProdotti(categoriaSelezionata.value);
+	}
+}
 </script>
 
 <template>
 	<div id="notifica-container" style="position: fixed;top: 20px;right: 20px;z-index: 9999;"></div>
-
 	<div class="categorie-prodotti-wrapper">
 		<div class="dropdown-categorie-wrapper">
 			<button class="btn-dropdown-categorie" @click="showDropdown = !showDropdown">
@@ -246,6 +284,21 @@ async function inviaRecensioneOverlay() {
 						</button>
 					</li>
 				</ul>
+				<p class="filtri-title">---- Filtri di Ricerca ----</p>
+				<div class="filtri-ricerca">
+					<button @click="filtroPrezzo='asc'; applicaFiltri()">
+						Prezzo ↑
+					</button>
+					<button @click="filtroPrezzo='desc'; applicaFiltri()">
+						Prezzo ↓
+					</button>
+					<button @click="filtroValutazione='desc'; applicaFiltri()">
+						Valutazione ⭐
+					</button>
+					<button class="reset-filtri" @click="azzeraFiltri">
+						Azzera filtri
+					</button>
+				</div>
 			</div>
 		</div>
 		<div class="prodotti-container">
